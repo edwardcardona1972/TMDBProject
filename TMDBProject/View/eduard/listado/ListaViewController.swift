@@ -8,12 +8,17 @@
 import UIKit
 
 class ListaViewController: UIViewController {
-
-    var listaViewModel: ListaViewModel!
+    
+    var presenter: ListaPresenter? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        listaViewModel = ListaViewModel()
+        let providerProtocol: PeliculasProviderProtocol = PeliculasProviderMock()
+        presenter = ListaPresenter(peliculasProviderProtocol: providerProtocol)
+        Task{
+            await presenter?.getPeliculas()
+            for peli in presenter?.peliculas ?? [] {
+                print(peli.title)    }
+        }
     }
-    
 }

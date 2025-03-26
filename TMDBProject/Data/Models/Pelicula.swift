@@ -11,13 +11,13 @@ struct ResponseMasPopulares: Decodable {
 }
 struct Pelicula: Decodable {
     let adult: Bool
-    let ´genere_ids´:[Int]
+    let genre_ids:[Int]
     let id: Int
     let original_language: String
     let original_title: String
     let overview: String
     let popularity: Double
-    let poster_path: String?
+    let poster_path: String
     let release_date: String
     let title: String
     let video: Bool

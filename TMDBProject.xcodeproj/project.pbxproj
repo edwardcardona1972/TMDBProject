@@ -52,16 +52,6 @@
 			path = TMDBProject;
 			sourceTree = "<group>";
 		};
-		A08589B12D91C506009B575D /* TMDBProjectTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = TMDBProjectTests;
-			sourceTree = "<group>";
-		};
-		A08589BB2D91C507009B575D /* TMDBProjectUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = TMDBProjectUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,8 +84,6 @@
 			isa = PBXGroup;
 			children = (
 				A085899A2D91C504009B575D /* TMDBProject */,
-				A08589B12D91C506009B575D /* TMDBProjectTests */,
-				A08589BB2D91C507009B575D /* TMDBProjectUITests */,
 				A0858A092D91D49C009B575D /* Frameworks */,
 				A08589992D91C504009B575D /* Products */,
 			);
@@ -157,9 +145,6 @@
 			dependencies = (
 				A08589B02D91C506009B575D /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				A08589B12D91C506009B575D /* TMDBProjectTests */,
-			);
 			name = TMDBProjectTests;
 			packageProductDependencies = (
 			);
@@ -179,9 +164,6 @@
 			);
 			dependencies = (
 				A08589BA2D91C507009B575D /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				A08589BB2D91C507009B575D /* TMDBProjectUITests */,
 			);
 			name = TMDBProjectUITests;
 			packageProductDependencies = (
