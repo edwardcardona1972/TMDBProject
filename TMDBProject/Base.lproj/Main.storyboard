@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Personajes-->
+        <!--Peliculas-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ListaViewController" customModule="TMDBProject" customModuleProvider="target" sceneMemberID="viewController">
@@ -63,20 +63,20 @@
                             <constraint firstItem="gjc-lu-DdY" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="sIk-FX-evY"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Personajes" id="Ukz-LS-hQf"/>
+                    <navigationItem key="navigationItem" title="Peliculas" id="Ukz-LS-hQf"/>
                     <connections>
                         <outlet property="tv" destination="gjc-lu-DdY" id="giW-em-hVt"/>
-                        <segue destination="ZnT-2c-kDj" kind="show" identifier="personaje" id="Xz1-ce-t3f"/>
+                        <segue destination="ZnT-2c-kDj" kind="show" identifier="detalle" id="Xz1-ce-t3f"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="809.92366412213732" y="4.9295774647887329"/>
         </scene>
-        <!--Personaje-->
+        <!--Detalle-->
         <scene sceneID="5t1-CC-7bK">
             <objects>
-                <viewController id="ZnT-2c-kDj" customClass="ViewController" customModule="TMDBProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="ZnT-2c-kDj" customClass="DetalleViewController" customModule="TMDBProject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="U7h-gO-f4F">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -205,7 +205,7 @@
                             <constraint firstItem="hU8-AT-kIM" firstAttribute="top" secondItem="be3-uN-dIs" secondAttribute="bottom" id="v2f-aO-AmM"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Personaje" id="hwJ-Mg-hCe"/>
+                    <navigationItem key="navigationItem" title="Detalle" id="hwJ-Mg-hCe"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="miH-DU-zKE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
