@@ -8,5 +8,5 @@
 import Foundation
 
 protocol PeliculasProviderProtocol {
-    func getPeliculas() async -> ResponseMasPopulares
+    func getPeliculas() -> ResponseMasPopulares
 }

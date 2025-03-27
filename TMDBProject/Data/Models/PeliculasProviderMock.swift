@@ -6,7 +6,7 @@
 //
 
 class PeliculasProviderMock : PeliculasProviderProtocol {
-    func getPeliculas() async -> ResponseMasPopulares {
+    func getPeliculas() -> ResponseMasPopulares {
         let model = Utils.parseJson(jsonName: "maspopulares", model: ResponseMasPopulares.self) ?? ResponseMasPopulares(page: 0, results: [])
         return model
     }

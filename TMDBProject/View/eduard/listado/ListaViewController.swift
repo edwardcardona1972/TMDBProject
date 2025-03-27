@@ -6,33 +6,39 @@
 //
 
 import UIKit
+import Combine
 
 class ListaViewController: UIViewController, UITextViewDelegate {
     
     @IBOutlet weak var tv: UITableView!
     
-    var presenter: ListaPresenter? = nil
-    
+    var viewModel: ListaViewModel? = nil
+    var anyCancellable : [AnyCancellable] = []
     override func viewDidLoad() {
         super.viewDidLoad()
-        let providerProtocol: PeliculasProviderProtocol = PeliculasProviderMock()
-        presenter = ListaPresenter(peliculasProviderProtocol: providerProtocol)
-        
         tv.delegate = self
         tv.dataSource = self
-        Task{
-            await presenter?.getPeliculas()
-            tv.reloadData()
-        }
+        
+        let providerProtocol: PeliculasProviderProtocol = PeliculasProviderMock()
+        viewModel = ListaViewModel(peliculasProviderProtocol: providerProtocol)
+        viewModel?.getPeliculas()
+        
+        subscriptions()
+    }
+    func subscriptions() {
+        viewModel?.reloadData.sink { _ in} receiveValue: { _ in
+            self.tv.reloadData()
+        }.store(in: &anyCancellable)
     }
 }
+
 extension ListaViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return presenter?.peliculas.count ?? 0
+        return viewModel?.peliculas.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let pelicula = presenter?.peliculas[indexPath.row]
+        let pelicula = viewModel?.peliculas[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.textLabel?.text = pelicula?.title
         cell.detailTextLabel?.text = pelicula?.overview ?? ""
