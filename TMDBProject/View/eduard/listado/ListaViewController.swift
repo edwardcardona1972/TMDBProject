@@ -7,16 +7,19 @@
 
 import UIKit
 
-class ListaViewController: UIViewController {
+class ListaViewController: UIViewController, UITextViewDelegate {
     
     @IBOutlet weak var tv: UITableView!
+    @IBOutlet weak var descripción: UITextView!
+    
+    
     var presenter: ListaPresenter? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
         let providerProtocol: PeliculasProviderProtocol = PeliculasProviderMock()
         presenter = ListaPresenter(peliculasProviderProtocol: providerProtocol)
-        
+
         tv.delegate = self
         tv.dataSource = self
         //añadir los delegados de la tabla ejemplo tv.delegate = self
@@ -35,6 +38,16 @@ extension ListaViewController: UITableViewDelegate, UITableViewDataSource {
         let pelicula = presenter?.peliculas[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.textLabel?.text = pelicula?.title
+        cell.detailTextLabel?.text = pelicula?.overview ?? ""
+        
+        let url = URLRequest(url: URL(string: "https://image.tmdb.org/t/p/w500/" + (pelicula?.poster_path ?? ""))!)
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            guard let imageData = data else { return }
+            DispatchQueue.main.async {
+            cell.imageView?.image = UIImage(data: imageData)
+            }
+        }.resume()
         return cell
     }
 }
+
