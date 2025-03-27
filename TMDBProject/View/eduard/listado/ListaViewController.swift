@@ -10,8 +10,6 @@ import UIKit
 class ListaViewController: UIViewController, UITextViewDelegate {
     
     @IBOutlet weak var tv: UITableView!
-    @IBOutlet weak var descripción: UITextView!
-    
     
     var presenter: ListaPresenter? = nil
     
@@ -19,10 +17,9 @@ class ListaViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         let providerProtocol: PeliculasProviderProtocol = PeliculasProviderMock()
         presenter = ListaPresenter(peliculasProviderProtocol: providerProtocol)
-
+        
         tv.delegate = self
         tv.dataSource = self
-        //añadir los delegados de la tabla ejemplo tv.delegate = self
         Task{
             await presenter?.getPeliculas()
             tv.reloadData()
@@ -44,7 +41,7 @@ extension ListaViewController: UITableViewDelegate, UITableViewDataSource {
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let imageData = data else { return }
             DispatchQueue.main.async {
-            cell.imageView?.image = UIImage(data: imageData)
+                cell.imageView?.image = UIImage(data: imageData)
             }
         }.resume()
         return cell
