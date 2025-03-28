@@ -63,7 +63,4 @@ extension ListaViewController: UITableViewDelegate, UITableViewDataSource {
         }.resume()
         return cell
     }
-    
 }
-
-
