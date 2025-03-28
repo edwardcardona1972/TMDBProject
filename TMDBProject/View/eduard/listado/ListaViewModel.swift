@@ -10,7 +10,7 @@ class ListaViewModel {
     
     var peliculasProviderProtocol: PeliculasProviderProtocol
     var peliculas: [Pelicula] = []
-    var reloadData = PassthroughSubject<Void, Never>()
+    var reloadData = PassthroughSubject<Void, Error>()
     var anyPublisher: Set<AnyCancellable> = []
     
     init(peliculasProviderProtocol: PeliculasProviderProtocol) {
@@ -22,7 +22,7 @@ class ListaViewModel {
             print("Completion: \(completion)")
         } receiveValue: { (peliculas) in
             self.peliculas = peliculas.results
+            self.reloadData.send(())
         }.store(in: &anyPublisher)
-        reloadData.send(())
     }
 }

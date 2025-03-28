@@ -18,19 +18,19 @@ class ListaViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         tv.delegate = self
         tv.dataSource = self
-        
+        subscriptions()
         let providerProtocol: PeliculasProviderProtocol = PeliculasProviderMock()
         viewModel = ListaViewModel(peliculasProviderProtocol: providerProtocol)
         viewModel?.getPeliculas()
-        subscriptions()
     }
+    
     func subscriptions() {
-        viewModel?.reloadData.sink { _ in} receiveValue: { _ in           
+        viewModel?.reloadData.sink { _ in} receiveValue: { _ in
+            self.tv.reloadData()
         }.store(in: &anyCancellables)
-        self.tv.reloadData()
+        
     }
 }
-
 extension ListaViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel?.peliculas.count ?? 0
@@ -52,4 +52,3 @@ extension ListaViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
 }
-
