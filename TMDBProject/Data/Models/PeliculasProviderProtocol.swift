@@ -6,7 +6,8 @@
 //
 
 import Foundation
+import Combine
 
 protocol PeliculasProviderProtocol {
-    func getPeliculas() -> ResponseMasPopulares
+    func getPeliculas() -> AnyPublisher<ResponseMasPopulares, Never>
 }

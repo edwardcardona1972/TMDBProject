@@ -5,9 +5,14 @@
 //  Created by Eduard Alexis Cardona Grajales on 26/3/25.
 //
 
+import Combine
+import Foundation
+
 class PeliculasProviderMock : PeliculasProviderProtocol {
-    func getPeliculas() -> ResponseMasPopulares {
+    func getPeliculas() -> AnyPublisher<ResponseMasPopulares, Never> {
         let model = Utils.parseJson(jsonName: "maspopulares", model: ResponseMasPopulares.self) ?? ResponseMasPopulares(page: 0, results: [])
-        return model
+        return Just(model)
+            .setFailureType(to: Never.self)
+            .eraseToAnyPublisher()
     }
 }

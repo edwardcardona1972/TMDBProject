@@ -13,7 +13,7 @@ class ListaViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var tv: UITableView!
     
     var viewModel: ListaViewModel? = nil
-    var anyCancellable : [AnyCancellable] = []
+    var anyCancellables: Set<AnyCancellable> = []
     override func viewDidLoad() {
         super.viewDidLoad()
         tv.delegate = self
@@ -22,13 +22,12 @@ class ListaViewController: UIViewController, UITextViewDelegate {
         let providerProtocol: PeliculasProviderProtocol = PeliculasProviderMock()
         viewModel = ListaViewModel(peliculasProviderProtocol: providerProtocol)
         viewModel?.getPeliculas()
-        
         subscriptions()
     }
     func subscriptions() {
-        viewModel?.reloadData.sink { _ in} receiveValue: { _ in
-            self.tv.reloadData()
-        }.store(in: &anyCancellable)
+        viewModel?.reloadData.sink { _ in} receiveValue: { _ in           
+        }.store(in: &anyCancellables)
+        self.tv.reloadData()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
