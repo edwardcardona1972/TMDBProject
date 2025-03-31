@@ -13,11 +13,15 @@ class Utils {
         }
         do {
             let data = try Data(contentsOf: url)
-            let decoder = JSONDecoder()
-            return try decoder.decode(T.self, from: data)
+            return try jsonDecoder.decode(T.self, from: data)
         } catch {
             print("Error parsing JSON: \(error)")
             return nil
         }
     }
+    
+    static let jsonDecoder: JSONDecoder = {
+        let decoder = JSONDecoder()
+        return decoder
+    }()
 }

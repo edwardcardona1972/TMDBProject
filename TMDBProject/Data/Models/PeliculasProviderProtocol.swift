@@ -9,5 +9,5 @@ import Foundation
 import Combine
 
 protocol PeliculasProviderProtocol {
-    func getPeliculas() -> AnyPublisher<ResponseMasPopulares, Error>
+    func getPeliculas(page: String, completed: @escaping (Result<ResponseMasPopulares, PeliculaError>) -> ())
 }

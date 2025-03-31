@@ -29,23 +29,23 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="t8D-L1-Qps">
-                                                    <rect key="frame" x="62.166666666666671" y="55.333333333333343" width="37.666666666666664" height="24"/>
+                                                    <rect key="frame" x="59.000000000000014" y="55.333333333333343" width="37.666666666666664" height="24"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="XlN-Jf-v64">
-                                                    <rect key="frame" x="62.166666666666671" y="83" width="32.666666666666664" height="14.333333333333334"/>
+                                                    <rect key="frame" x="59.000000000000014" y="83" width="32.666666666666664" height="14.333333333333334"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="ywv-Rp-hvJ">
-                                                    <rect key="frame" x="16.833333333333336" y="62.000000000000007" width="30.333333333333332" height="30.333333333333332"/>
+                                                    <rect key="frame" x="20.333333333333336" y="66" width="23.333333333333332" height="22.666666666666668"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <imageReference key="image" image="person.circle" catalog="system" symbolScale="large" variableValue="5.5511151231257827e-17"/>
+                                                    <imageReference key="image" image="person.circle" catalog="system" symbolScale="default" variableValue="5.5511151231257827e-17"/>
                                                     <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="20" scale="large"/>
                                                 </imageView>
                                             </subviews>

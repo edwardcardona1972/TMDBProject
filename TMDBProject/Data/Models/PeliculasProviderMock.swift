@@ -9,10 +9,8 @@ import Combine
 import Foundation
 
 class PeliculasProviderMock : PeliculasProviderProtocol {
-    func getPeliculas() -> AnyPublisher<ResponseMasPopulares, Error> {
+    func getPeliculas(page: String, completed: @escaping (Result<ResponseMasPopulares, PeliculaError>) -> ()){
         let model = Utils.parseJson(jsonName: "maspopulares", model: ResponseMasPopulares.self) ?? ResponseMasPopulares(page: 0, results: [])
-        return Just(model)
-            .setFailureType(to: Error.self)
-            .eraseToAnyPublisher()
+        completed(Result.success(model))
     }
 }

@@ -12,47 +12,48 @@ class ListaViewController: UIViewController, UITextViewDelegate {
     
     @IBOutlet weak var tv: UITableView!
     
-    var viewModel: ListaViewModel? = nil
+    var viewModel: ListaViewModel = ListaViewModel(peliculasProviderProtocol: PeliculasProviderNetwork())
     var anyCancellables: Set<AnyCancellable> = []
+    var pagina: Int = 1
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        subscriptions()
+        viewModel.getPeliculas(pagina: String(pagina))
         tv.delegate = self
         tv.dataSource = self
-        subscriptions()
-        let providerProtocol: PeliculasProviderProtocol = PeliculasProviderMock()
-        viewModel = ListaViewModel(peliculasProviderProtocol: providerProtocol)
-        viewModel?.getPeliculas()
     }
     
     func subscriptions() {
-        viewModel?.reloadData.sink { _ in} receiveValue: { _ in
+        viewModel.reloadData.sink { _ in} receiveValue: { _ in
             self.tv.reloadData()
         }.store(in: &anyCancellables)
+        
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "detalle", sender: self)
+            performSegue(withIdentifier: "detalle", sender: self)
         
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "detalle" {
             let vc = segue.destination as! DetalleViewController
-            vc.pelicula = viewModel?.peliculas[tv.indexPathForSelectedRow!.row]
+            vc.pelicula = viewModel.peliculas[tv.indexPathForSelectedRow!.row]
         }
     }
 }
 extension ListaViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel?.peliculas.count ?? 0
+        return viewModel.peliculas.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let pelicula = viewModel?.peliculas[indexPath.row]
+        let pelicula = viewModel.peliculas[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = pelicula?.title
-        cell.detailTextLabel?.text = pelicula?.overview ?? ""
+        cell.textLabel?.text = pelicula.title
+        cell.detailTextLabel?.text = pelicula.overview
         
-        let url = URLRequest(url: URL(string: "https://image.tmdb.org/t/p/w500/" + (pelicula?.poster_path ?? ""))!)
+        let url = URLRequest(url: URL(string: "https://image.tmdb.org/t/p/w500/" + pelicula.poster_path)!)
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let imageData = data else { return }
             DispatchQueue.main.async {
@@ -60,5 +61,12 @@ extension ListaViewController: UITableViewDelegate, UITableViewDataSource {
             }
         }.resume()
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if (indexPath.row >= viewModel.peliculas.count) {
+            pagina = pagina + 1
+            viewModel.getPeliculas(pagina: String(pagina))
+        }
     }
 }
