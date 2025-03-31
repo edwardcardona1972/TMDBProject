@@ -28,11 +28,10 @@ class ListaViewController: UIViewController, UITextViewDelegate {
         viewModel?.reloadData.sink { _ in} receiveValue: { _ in
             self.tv.reloadData()
         }.store(in: &anyCancellables)
-        
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            performSegue(withIdentifier: "detalle", sender: self)
+        performSegue(withIdentifier: "detalle", sender: self)
         
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -62,5 +61,4 @@ extension ListaViewController: UITableViewDelegate, UITableViewDataSource {
         }.resume()
         return cell
     }
-    
 }
