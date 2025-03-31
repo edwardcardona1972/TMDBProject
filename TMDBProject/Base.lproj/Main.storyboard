@@ -206,6 +206,10 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Detalle" id="hwJ-Mg-hCe"/>
+                    <connections>
+                        <outlet property="descripcion" destination="hU8-AT-kIM" id="bbV-Qx-PPa"/>
+                        <outlet property="imageView" destination="e8b-s1-ozJ" id="iI9-r2-3xC"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="miH-DU-zKE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
