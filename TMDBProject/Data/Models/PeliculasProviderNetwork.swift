@@ -6,14 +6,13 @@
 //
 
 import Foundation
-import Combine
 
 class PeliculasProviderNetwork: PeliculasProviderProtocol {
     
     private let urlSession = URLSession.shared
     private let jsonDecoder = Utils.jsonDecoder
     
-    func getPeliculas(page:String, completed: @escaping (Result<ResponseMasPopulares, PeliculaError>) -> ()){
+    func getPeliculas(page:String, completed: @escaping (Result<ResponseMasPopulares, PeliculaError>) -> ()) {
         
         let url = URL(string: "https://api.themoviedb.org/3/movie/popular")!
         var components = URLComponents(url: url, resolvingAgainstBaseURL: true)!
@@ -41,14 +40,12 @@ class PeliculasProviderNetwork: PeliculasProviderProtocol {
                 self.ejecutarCompletionHandlerHiloPrincipal(with: .failure(.respuestaInvalida), completed: completed)
                 return
             }
-            
-            do{
+            do {
                 let responseMasPopulares = try self.jsonDecoder.decode(ResponseMasPopulares.self, from: data ?? Data())
                 self.ejecutarCompletionHandlerHiloPrincipal(with: .success(responseMasPopulares), completed: completed)
             } catch {
                 self.ejecutarCompletionHandlerHiloPrincipal(with: .failure(.respuestaInvalida), completed: completed)
             }
-
         }.resume()
     }
     

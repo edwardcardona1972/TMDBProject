@@ -17,14 +17,13 @@ class ListaViewModel: ObservableObject {
         self.peliculasProviderProtocol = peliculasProviderProtocol
     }
     
-    func getPeliculas(pagina: String){
+    func getPeliculas(pagina: String) {
         peliculasProviderProtocol.getPeliculas(page: pagina){ [weak self] (result) in
             guard let self = self else { return }
             switch result {
             case .success(let response):
-                self.peliculas = self.peliculas + response.results
+                self.peliculas.append(contentsOf: response.results) 
                 self.reloadData.send(())
-                print(response)
             case .failure(let error):
                 print(error.descripcion)
                 reloadData.send(completion: .failure(error))
