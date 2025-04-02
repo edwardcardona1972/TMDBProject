@@ -9,4 +9,5 @@ import Foundation
 
 protocol PeliculasProviderProtocol {
     func getPeliculas(page: String, completed: @escaping (Result<ResponseMasPopulares, PeliculaError>) -> ())
+    func getDetallesPelicula(peliculaId: String, completed: @escaping (Result<ResponseDetallesPelicula, PeliculaError>) -> ())
 }
