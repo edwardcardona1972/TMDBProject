@@ -28,7 +28,17 @@ class ListaViewController: UIViewController, UITextViewDelegate {
         viewModel?.reloadData.sink { _ in} receiveValue: { _ in
             self.tv.reloadData()
         }.store(in: &anyCancellables)
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "detalle", sender: self)
         
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "detalle" {
+            let vc = segue.destination as! DetalleViewController
+            vc.pelicula = viewModel?.peliculas[tv.indexPathForSelectedRow!.row]
+        }
     }
 }
 extension ListaViewController: UITableViewDelegate, UITableViewDataSource {
