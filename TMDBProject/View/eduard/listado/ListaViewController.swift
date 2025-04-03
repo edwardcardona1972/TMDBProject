@@ -37,7 +37,7 @@ class ListaViewController: UIViewController, UITextViewDelegate {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "detalle" {
             let vc = segue.destination as! DetalleViewController
-            vc.pelicula = viewModel.peliculas[tv.indexPathForSelectedRow!.row]
+            vc.idPelicula = viewModel.peliculas[tv.indexPathForSelectedRow!.row].id
         }
     }
 }
@@ -69,3 +69,4 @@ extension ListaViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
 }
+
