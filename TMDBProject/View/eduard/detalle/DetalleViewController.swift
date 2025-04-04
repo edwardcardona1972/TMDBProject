@@ -6,28 +6,63 @@
 //
 
 import UIKit
+import Combine
 
 class DetalleViewController: UIViewController {
     
     @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var descripcion: UITextView!
-    var pelicula: Pelicula?
+    @IBOutlet weak var originContry: UILabel!
+    @IBOutlet weak var budget: UILabel!
+    @IBOutlet weak var revenue: UILabel!
+    @IBOutlet weak var popularity: UILabel!
+    @IBOutlet weak var adult: UILabel!
+    @IBOutlet weak var movieTitle: UILabel!
+    
+    var idPelicula : Int = 0
+    var cancellables: Set<AnyCancellable> = []
+    var viewModel: DetailsViewModel = DetailsViewModel(peliculasProviderProtocol: PeliculasProviderNetwork())
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        subscription()
+        viewModel.getDetallesPelicula(peliculaId: String(idPelicula))
     }
-}
-extension DetalleViewController {
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        guard let pelicula = pelicula else { return }
-        descripcion.text = pelicula.overview
+    
+    func subscription() {
+        viewModel.reloadData.sink { _ in} receiveValue: { _ in
+            guard let details = self.viewModel.detallePelicula else { return }
+            self.movieTitle.text = details.title
+            self.originContry.text = details.origin_country.joined(separator: ", ")
+            self.budget.text = "Budget: \(details.budget ?? 0)"
+            self.revenue.text = "Revenue: \(details.revenue ?? 0)"
+            self.popularity.text = "Popularity: \(details.popularity ?? 0)"
+            self.adult.text = "Adult: \(details.adult)"
+            
+            if let poster_path = details.poster_path {
+                self.loadImage(posterPath: poster_path)
+            }
+        }
+        .store(in: &cancellables)
+    }
+    func loadImage(posterPath: String) {
+        let urlString = "https://image.tmdb.org/t/p/w500/\(posterPath)"
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL string: \(urlString)")
+            return
+        }
         
-        let url = URLRequest(url: URL(string: "https://image.tmdb.org/t/p/w500/" + (pelicula.poster_path))!)
-        URLSession.shared.dataTask(with: url) { data, _, error in
-            guard let data = data else { return }
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
+            guard let self = self else { return }
+            if let error = error {
+                print("Error loading image: \(error)")
+                return
+            }
+            guard let imageData = data else {
+                print("No image data received.")
+                return
+            }
             DispatchQueue.main.async {
-                self.imageView.image = UIImage(data: data)
+                self.imageView.image = UIImage(data: imageData)
             }
         }.resume()
     }
