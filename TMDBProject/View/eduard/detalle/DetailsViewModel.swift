@@ -8,27 +8,30 @@
 import Foundation
 import Combine
 
-class DetailsViewModel: ObservableObject {
+class DetailsViewModel {
     
     var peliculasProviderProtocol: PeliculasProviderProtocol
-    @Published var detallePelicula: ResponseDetallesPelicula?
+    var detallePelicula: ResponseDetallesPelicula?
     var reloadData = PassthroughSubject<Void, Error>()
+    var anyCancellables: Set<AnyCancellable> = []
     
     init(peliculasProviderProtocol: PeliculasProviderProtocol) {
         self.peliculasProviderProtocol = peliculasProviderProtocol
     }
     
     func getDetallesPelicula(peliculaId: String) {
-        peliculasProviderProtocol.getDetallesPelicula(peliculaId: peliculaId){ [weak self] (result) in
-            guard let self = self else { return }
-            switch result {
-            case .success(let response):
-                self.detallePelicula = response
-                self.reloadData.send(())
+        peliculasProviderProtocol.getDetallesPelicula(peliculaId: peliculaId).sink(receiveCompletion: { completion in
+            switch completion {
             case .failure(let error):
                 print(error.descripcion)
-                reloadData.send(completion: .failure(error))
+                self.reloadData.send(completion: .failure(error))
+            case .finished:
+                break
             }
-        }
+        }, receiveValue: {response in
+            self.detallePelicula = response
+            self.reloadData.send(())
+        })
+        .store(in: &anyCancellables)
     }
 }

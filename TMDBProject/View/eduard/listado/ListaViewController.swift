@@ -69,4 +69,3 @@ extension ListaViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
 }
-

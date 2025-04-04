@@ -7,23 +7,25 @@
 
 
 import Foundation
+import Combine
 
 class PeliculasProviderMock : PeliculasProviderProtocol {
-    func getPeliculas(page: String, completed: @escaping (Result<ResponseMasPopulares, PeliculaError>) -> ()) {
-        guard let model = Utils.parseJson(jsonName: "maspopulares", model: ResponseMasPopulares.self)
-        else{
-            completed(.failure(.respuestaInvalida))
-            return
+    func getPeliculas(page: String) -> AnyPublisher<ResponseMasPopulares, PeliculaError> {
+        guard let model = Utils.parseJson(jsonName: "maspopulares", model: ResponseMasPopulares.self) else {
+            return Fail(error: PeliculaError.respuestaInvalida).eraseToAnyPublisher()
         }
-        completed(Result.success(model))
+        return Just(model)
+            .setFailureType(to: PeliculaError.self)
+            .eraseToAnyPublisher()
     }
-
-    func getDetallesPelicula(peliculaId: String, completed: @escaping (Result<ResponseDetallesPelicula, PeliculaError>) -> ()) {
-        guard let model = Utils.parseJson(jsonName: "detallesPelicula", model: ResponseDetallesPelicula.self)
-        else {
-            completed(.failure(.respuestaInvalida))
-            return
+    
+    func getDetallesPelicula(peliculaId: String) -> AnyPublisher<ResponseDetallesPelicula, PeliculaError> {
+        guard let model = Utils.parseJson(jsonName: "detallesPelicula", model: ResponseDetallesPelicula.self) else {
+            return Fail (error: PeliculaError.respuestaInvalida).eraseToAnyPublisher()
         }
-        completed(Result.success(model))
+        return Just(model)
+            .setFailureType(to: PeliculaError.self)
+            .eraseToAnyPublisher()
     }
 }
+
