@@ -32,7 +32,7 @@ class DetalleViewController: UIViewController {
         viewModel.reloadData.sink { _ in} receiveValue: { _ in
             guard let details = self.viewModel.detallePelicula else { return }
             self.movieTitle.text = details.title
-            self.originContry.text = details.origin_country.joined(separator: ", ")
+            self.originContry.text = details.origin_country[0] ?? ""
             self.budget.text = "Budget: \(details.budget ?? 0)"
             self.revenue.text = "Revenue: \(details.revenue ?? 0)"
             self.popularity.text = "Popularity: \(details.popularity ?? 0)"

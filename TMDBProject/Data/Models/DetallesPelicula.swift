@@ -10,11 +10,11 @@ struct ResponseDetallesPelicula: Decodable {
     let backdrop_path: String?
     let belongs_to_collection: String?
     let budget: Int?
-    let genres: [Genre]?
+    let genres: [Genre?]
     let homepage: String?
     let id: Int?
     let imdb_id: String?
-    let origin_country: [String]
+    let origin_country: [String?]
     let original_language: String?
     let original_title: String?
     let overview: String?

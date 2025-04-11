@@ -8,10 +8,16 @@
 import UIKit
 import Combine
 
-class ListaViewController: UIViewController, UITextViewDelegate {
+protocol ListaViewModelDelegate: AnyObject {
+    func didLoadImage(image: UIImage, at indexPath: IndexPath)
+}
+
+class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TableViewCell2Delegate, ListaViewModelDelegate {
     
-    @IBOutlet weak var tv: UITableView!
-    
+    @IBOutlet weak var Tv: UITableView!
+    private var selectedIndexPathForSegue: IndexPath?
+    private var loadedImages: [IndexPath: UIImage] = [:]
+    weak var delegate: ListaViewModelDelegate?
     var viewModel: ListaViewModel = ListaViewModel(peliculasProviderProtocol: PeliculasProviderNetwork())
     var anyCancellables: Set<AnyCancellable> = []
     var pagina: Int = 1
@@ -20,52 +26,65 @@ class ListaViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         subscriptions()
         viewModel.getPeliculas(pagina: String(pagina))
-        tv.delegate = self
-        tv.dataSource = self
+        Tv.register(UINib(nibName: "TableViewCell2", bundle: nil), forCellReuseIdentifier: "celda")
+        Tv.delegate = self
+        Tv.dataSource = self
     }
     
     func subscriptions() {
         viewModel.reloadData.sink { _ in} receiveValue: { _ in
-            self.tv.reloadData()
+            self.Tv.reloadData()
         }.store(in: &anyCancellables)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedIndexPathForSegue = indexPath
         performSegue(withIdentifier: "detalle", sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "detalle" {
-            let vc = segue.destination as! DetalleViewController
-            vc.idPelicula = viewModel.peliculas[tv.indexPathForSelectedRow!.row].id
+            let vc = segue.destination as? DetalleViewController
+            vc!.idPelicula = viewModel.peliculas[selectedIndexPathForSegue!.row].id
         }
     }
-}
-extension ListaViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.peliculas.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let pelicula = viewModel.peliculas[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = pelicula.title
-        cell.detailTextLabel?.text = pelicula.overview
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "celda", for: indexPath) as? TableViewCell2 else {
+            fatalError("No se pudo crear la celda")
+        }
         
-        let url = URLRequest(url: URL(string: "https://image.tmdb.org/t/p/w500/" + pelicula.poster_path)!)
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            guard let imageData = data else { return }
-            DispatchQueue.main.async {
-                cell.imageView?.image = UIImage(data: imageData)
-            }
-        }.resume()
+        let pelicula = viewModel.peliculas[indexPath.row]
+        print(cell)
+        cell.titulosPelicula.text = pelicula.title
+        cell.detallesPelicula.text = pelicula.overview
+        cell.delegate = self
+        
+        if let loadedImage = loadedImages[indexPath] {
+            cell.imagenPelicula.image = loadedImage
+        } else {
+            cell.imagenPelicula.image = UIImage(named: "placeholder")
+            cell.loadImage(from: pelicula.poster_path)
+        }
         return cell
     }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row == viewModel.peliculas.count - 1 {
-            pagina += 1
-            viewModel.getPeliculas(pagina: String(pagina))
+    // MARK: - TableViewCellDelegate
+    func didStartLoadingImage(in cell: TableViewCell2) {
+        if let indexPath = Tv.indexPath(for: cell) {
+            print("llamada start loading")
+            let pelicula = viewModel.peliculas[indexPath.row]
+            viewModel.loadImage(posterPath: pelicula.poster_path, at: indexPath)
         }
+    }
+    // MARK: - ListaViewModelDelegate
+    func didLoadImage(image: UIImage, at indexPath: IndexPath) {
+        print("Imagen cargada")
+        loadedImages[indexPath] = image
+        Tv.reloadRows(at: [indexPath], with: .none)
     }
 }
