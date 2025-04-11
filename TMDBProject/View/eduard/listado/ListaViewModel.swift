@@ -38,7 +38,6 @@ class ListaViewModel {
     }
     
     func loadImage(posterPath: String, at indexPath: IndexPath) {
-        print("lista viewmodel intenta cargar la imagen")
         if let cachedImage = imageCache[posterPath] {
             delegate?.didLoadImage(image: cachedImage, at: indexPath)
             return
@@ -58,4 +57,4 @@ class ListaViewModel {
             }
             .store(in: &anyCancellable)
     }
-}//print("carga la imagen table view cell 2")
+}

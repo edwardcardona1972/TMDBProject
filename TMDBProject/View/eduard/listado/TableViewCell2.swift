@@ -4,11 +4,11 @@
 //
 //  Created by Eduard Alexis Cardona Grajales on 9/4/25.
 //
-
 import UIKit
 protocol TableViewCell2Delegate: AnyObject {
-    func didStartLoadingImage(in cell: TableViewCell2)
+    func didStartLoadingImage(in index: IndexPath)
 }
+
 class TableViewCell2: UITableViewCell {
     @IBOutlet weak var imagenPelicula: UIImageView!
     @IBOutlet weak var titulosPelicula: UILabel!
@@ -16,7 +16,6 @@ class TableViewCell2: UITableViewCell {
     
     weak var delegate: TableViewCell2Delegate?
     private var currentTask: URLSessionDataTask?
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         imagenPelicula.image = UIImage(named: "placeholder")
@@ -27,12 +26,29 @@ class TableViewCell2: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    func loadImage(from urlString: String?){
-        guard let urlString = urlString, !urlString.isEmpty else{
+    func loadImage(from urlString: String?, index: IndexPath) {
+        guard let urlString = urlString, !urlString.isEmpty else {
             imagenPelicula.image = UIImage(named: "placeholder")
             return
         }
-        print("load imagen table view cell 2")
-        delegate?.didStartLoadingImage(in: self)
+        delegate?.didStartLoadingImage(in: index)
+        
+        guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(urlString)") else {
+            imagenPelicula.image = UIImage(named: "placeholder")
+            return
+        }
+        currentTask = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            guard let self = self, let data = data, error == nil,
+                  let image = UIImage(data: data) else {
+                DispatchQueue.main.async {
+                    self?.imagenPelicula.image = UIImage(named: "placeholder")
+                }
+                return
+            }
+            DispatchQueue.main.async {
+                self.imagenPelicula.image = image
+            }
+        }
+        currentTask?.resume()
     }
 }

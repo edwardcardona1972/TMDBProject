@@ -4,7 +4,6 @@
 //
 //  Created by Eduard Alexis Cardona Grajales on 25/3/25.
 //
-
 import UIKit
 import Combine
 
@@ -58,7 +57,6 @@ class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDat
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "celda", for: indexPath) as? TableViewCell2 else {
             fatalError("No se pudo crear la celda")
         }
-        
         let pelicula = viewModel.peliculas[indexPath.row]
         print(cell)
         cell.titulosPelicula.text = pelicula.title
@@ -69,21 +67,18 @@ class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDat
             cell.imagenPelicula.image = loadedImage
         } else {
             cell.imagenPelicula.image = UIImage(named: "placeholder")
-            cell.loadImage(from: pelicula.poster_path)
+            cell.loadImage(from: pelicula.poster_path, index: indexPath)
         }
         return cell
     }
     // MARK: - TableViewCellDelegate
-    func didStartLoadingImage(in cell: TableViewCell2) {
-        if let indexPath = Tv.indexPath(for: cell) {
-            print("llamada start loading")
-            let pelicula = viewModel.peliculas[indexPath.row]
-            viewModel.loadImage(posterPath: pelicula.poster_path, at: indexPath)
-        }
+    func didStartLoadingImage(in index: IndexPath) {
+        let pelicula = viewModel.peliculas[index.row]
+        viewModel.loadImage(posterPath: pelicula.poster_path, at: index)
     }
-    // MARK: - ListaViewModelDelegate
+    
+    //MARK: - ListaViewModelDelegate
     func didLoadImage(image: UIImage, at indexPath: IndexPath) {
-        print("Imagen cargada")
         loadedImages[indexPath] = image
         Tv.reloadRows(at: [indexPath], with: .none)
     }
