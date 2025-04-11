@@ -82,4 +82,10 @@ class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDat
         loadedImages[indexPath] = image
         Tv.reloadRows(at: [indexPath], with: .none)
     }
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == viewModel.peliculas.count - 1 {
+            pagina += 1
+            viewModel.getPeliculas(pagina: String(pagina))
+        }
+    }
 }
