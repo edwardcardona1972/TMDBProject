@@ -14,7 +14,6 @@ class ListaViewModel {
     var peliculas: [Pelicula] = []
     var reloadData = PassthroughSubject<Void, Error>()
     var anyCancellable: Set<AnyCancellable> = []
-    weak var delegate: ListaViewModelDelegate?
     private var imageCache: [String: UIImage] = [:]
     
     init(peliculasProviderProtocol: PeliculasProviderProtocol) {
@@ -35,26 +34,5 @@ class ListaViewModel {
             self.reloadData.send(())
         })
         .store(in: &anyCancellable)
-    }
-    
-    func loadImage(posterPath: String, at indexPath: IndexPath) {
-        if let cachedImage = imageCache[posterPath] {
-            delegate?.didLoadImage(image: cachedImage, at: indexPath)
-            return
-        }
-        guard let urlString = "https://image.tmdb.org/t/p/w500\(posterPath)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-              let url = URL(string: urlString) else {
-            return
-        }
-        URLSession.shared.dataTaskPublisher(for: url)
-            .map { UIImage(data: $0.data) }
-            .replaceError(with: nil)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] image in
-                guard let self = self, let image = image else { return }
-                self.imageCache[posterPath] = image
-                self.delegate?.didLoadImage(image: image, at: indexPath)
-            }
-            .store(in: &anyCancellable)
     }
 }

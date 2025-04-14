@@ -11,8 +11,8 @@ protocol ListaViewModelDelegate: AnyObject {
     func didLoadImage(image: UIImage, at indexPath: IndexPath)
 }
 
-class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TableViewCell2Delegate, ListaViewModelDelegate {
-    
+class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ListaViewModelDelegate {
+   
     @IBOutlet weak var Tv: UITableView!
     private var selectedIndexPathForSegue: IndexPath?
     private var loadedImages: [IndexPath: UIImage] = [:]
@@ -61,7 +61,7 @@ class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDat
         print(cell)
         cell.titulosPelicula.text = pelicula.title
         cell.detallesPelicula.text = pelicula.overview
-        cell.delegate = self
+        cell.imagenPelicula.image = loadedImages[indexPath] ?? UIImage(named: "placeholder")
         
         if let loadedImage = loadedImages[indexPath] {
             cell.imagenPelicula.image = loadedImage
@@ -70,11 +70,6 @@ class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDat
             cell.loadImage(from: pelicula.poster_path, index: indexPath)
         }
         return cell
-    }
-    // MARK: - TableViewCellDelegate
-    func didStartLoadingImage(in index: IndexPath) {
-        let pelicula = viewModel.peliculas[index.row]
-        viewModel.loadImage(posterPath: pelicula.poster_path, at: index)
     }
     
     //MARK: - ListaViewModelDelegate
