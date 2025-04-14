@@ -7,16 +7,11 @@
 import UIKit
 import Combine
 
-protocol ListaViewModelDelegate: AnyObject {
-    func didLoadImage(image: UIImage, at indexPath: IndexPath)
-}
-
-class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ListaViewModelDelegate {
-   
+class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
     @IBOutlet weak var Tv: UITableView!
     private var selectedIndexPathForSegue: IndexPath?
-    private var loadedImages: [IndexPath: UIImage] = [:]
-    weak var delegate: ListaViewModelDelegate?
+    private var cellSubscriptions: [IndexPath: AnyCancellable] = [:]
     var viewModel: ListaViewModel = ListaViewModel(peliculasProviderProtocol: PeliculasProviderNetwork())
     var anyCancellables: Set<AnyCancellable> = []
     var pagina: Int = 1
@@ -31,9 +26,12 @@ class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func subscriptions() {
-        viewModel.reloadData.sink { _ in} receiveValue: { _ in
-            self.Tv.reloadData()
-        }.store(in: &anyCancellables)
+        viewModel.$peliculas
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                self.Tv.reloadData()
+            }
+            .store(in: &anyCancellables)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -58,25 +56,20 @@ class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDat
             fatalError("No se pudo crear la celda")
         }
         let pelicula = viewModel.peliculas[indexPath.row]
-        print(cell)
         cell.titulosPelicula.text = pelicula.title
         cell.detallesPelicula.text = pelicula.overview
-        cell.imagenPelicula.image = loadedImages[indexPath] ?? UIImage(named: "placeholder")
-        
-        if let loadedImage = loadedImages[indexPath] {
-            cell.imagenPelicula.image = loadedImage
-        } else {
-            cell.imagenPelicula.image = UIImage(named: "placeholder")
-            cell.loadImage(from: pelicula.poster_path, index: indexPath)
-        }
+        cell.imagenPelicula.image = UIImage(named: "placeholder")
+        cellSubscriptions[indexPath]?.cancel()
+        cellSubscriptions[indexPath] = nil
+        cell.configure(with: pelicula, viewModel: viewModel, indexPath: indexPath)
         return cell
     }
     
-    //MARK: - ListaViewModelDelegate
-    func didLoadImage(image: UIImage, at indexPath: IndexPath) {
-        loadedImages[indexPath] = image
-        Tv.reloadRows(at: [indexPath], with: .none)
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cellSubscriptions[indexPath]?.cancel()
+        cellSubscriptions.removeValue(forKey: indexPath)
     }
+    
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == viewModel.peliculas.count - 1 {
             pagina += 1
