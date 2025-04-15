@@ -79,9 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				A085899A2D91C504009B575D /* TMDBProject */,
-				A0858A092D91D49C009B575D /* Frameworks */,
-				A08589B12D91C506009B575D /* TMDBProjectTests */,
-				A08589BB2D91C507009B575D /* TMDBProjectUITests */,
+				A0D6D87A2D9AB07100390D28 /* Frameworks */,
 				A08589992D91C504009B575D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -94,6 +92,13 @@
 				A08589B82D91C507009B575D /* TMDBProjectUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A0D6D87A2D9AB07100390D28 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -193,6 +198,8 @@
 			);
 			mainGroup = A085898F2D91C504009B575D;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A08589992D91C504009B575D /* Products */;
 			projectDirPath = "";

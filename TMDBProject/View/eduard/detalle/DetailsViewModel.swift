@@ -1,25 +1,26 @@
 //
-//  ListaViewModel.swift
+//  DetailsViewModel.swift
 //  TMDBProject
 //
-//  Created by Eduard Alexis Cardona Grajales on 25/3/25.
+//  Created by Eduard Alexis Cardona Grajales on 2/4/25.
 //
+
 import Foundation
 import Combine
 
-class ListaViewModel {
+class DetailsViewModel {
     
     var peliculasProviderProtocol: PeliculasProviderProtocol
-    var peliculas: [Pelicula] = []
+    var detallePelicula: ResponseDetallesPelicula?
     var reloadData = PassthroughSubject<Void, Error>()
-    var anyCancellable: Set<AnyCancellable> = []
+    var anyCancellables: Set<AnyCancellable> = []
     
     init(peliculasProviderProtocol: PeliculasProviderProtocol) {
         self.peliculasProviderProtocol = peliculasProviderProtocol
     }
     
-    func getPeliculas(pagina: String) {
-        peliculasProviderProtocol.getPeliculas(page: pagina).sink(receiveCompletion: {completion in
+    func getDetallesPelicula(peliculaId: String) {
+        peliculasProviderProtocol.getDetallesPelicula(peliculaId: peliculaId).sink(receiveCompletion: { completion in
             switch completion {
             case .failure(let error):
                 print(error.descripcion)
@@ -28,9 +29,9 @@ class ListaViewModel {
                 break
             }
         }, receiveValue: {response in
-            self.peliculas.append(contentsOf: response.results)
+            self.detallePelicula = response
             self.reloadData.send(())
         })
-        .store(in: &anyCancellable)
+        .store(in: &anyCancellables)
     }
 }

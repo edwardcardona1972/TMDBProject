@@ -5,14 +5,27 @@
 //  Created by Eduard Alexis Cardona Grajales on 26/3/25.
 //
 
-import Combine
+
 import Foundation
+import Combine
 
 class PeliculasProviderMock : PeliculasProviderProtocol {
-    func getPeliculas() -> AnyPublisher<ResponseMasPopulares, Error> {
-        let model = Utils.parseJson(jsonName: "maspopulares", model: ResponseMasPopulares.self) ?? ResponseMasPopulares(page: 0, results: [])
+    func getPeliculas(page: String) -> AnyPublisher<ResponseMasPopulares, PeliculaError> {
+        guard let model = Utils.parseJson(jsonName: "maspopulares", model: ResponseMasPopulares.self) else {
+            return Fail(error: PeliculaError.respuestaInvalida).eraseToAnyPublisher()
+        }
         return Just(model)
-            .setFailureType(to: Error.self)
+            .setFailureType(to: PeliculaError.self)
+            .eraseToAnyPublisher()
+    }
+    
+    func getDetallesPelicula(peliculaId: String) -> AnyPublisher<ResponseDetallesPelicula, PeliculaError> {
+        guard let model = Utils.parseJson(jsonName: "detallesPelicula", model: ResponseDetallesPelicula.self) else {
+            return Fail (error: PeliculaError.respuestaInvalida).eraseToAnyPublisher()
+        }
+        return Just(model)
+            .setFailureType(to: PeliculaError.self)
             .eraseToAnyPublisher()
     }
 }
+
