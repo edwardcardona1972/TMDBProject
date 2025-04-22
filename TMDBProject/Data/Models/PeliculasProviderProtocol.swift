@@ -8,7 +8,8 @@
 import Foundation
 import Combine
 
-protocol PeliculasProviderProtocol {
-    func getPeliculas(page: String) -> AnyPublisher<ResponseMasPopulares, PeliculaError>
+protocol peliculasProviderProtocol {
+    func obtenerPeliculas(page: String) -> AnyPublisher<ResponseMasPopulares, PeliculaError>
     func getDetallesPelicula(peliculaId: String) -> AnyPublisher<ResponseDetallesPelicula, PeliculaError>
+    func buscarPeliculas(query: String) -> AnyPublisher<ResponseMasPopulares, PeliculaError>
 }

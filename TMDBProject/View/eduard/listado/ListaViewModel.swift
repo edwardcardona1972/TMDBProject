@@ -8,29 +8,75 @@ import UIKit
 import Combine
 import Foundation
 
+protocol PeliculasProviderProtocol {
+    func obtenerPeliculas(pagina: String) -> AnyPublisher<ResponseMasPopulares, PeliculaError>
+    func getDetallesPelicula(peliculaId: String) -> AnyPublisher<ResponseDetallesPelicula, PeliculaError>
+    func buscarPeliculas(query: String) -> AnyPublisher<ResponseMasPopulares, PeliculaError>
+}
+
 class ListaViewModel {
-    var peliculasProviderProtocol: PeliculasProviderProtocol
+    let peliculasProviderProtocol: peliculasProviderProtocol
     @Published var peliculas: [Pelicula] = []
+    @Published var searchValue: String = ""
+    @Published var filteredPeliculas: [Pelicula] = []
     private var imageCache: [String: UIImage] = [:]
     private var anyCancellable: Set<AnyCancellable> = []
     let imageLoadedPublisher = PassthroughSubject<(UIImage?, IndexPath), Never>()
     
-    init(peliculasProviderProtocol: PeliculasProviderProtocol) {
-        self.peliculasProviderProtocol = peliculasProviderProtocol
+    init(peliculasProviderProtocol: peliculasProviderProtocol) {
+            self.peliculasProviderProtocol = peliculasProviderProtocol
+        $searchValue
+            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .removeDuplicates()
+            .sink { [weak self] searchText in
+                self?.filterPeliculas(searchText: searchText)
+            }
+            .store(in: &anyCancellable)
     }
     
     func getPeliculas(pagina: String) {
-        peliculasProviderProtocol.getPeliculas(page: pagina)
+        peliculasProviderProtocol.obtenerPeliculas(page: pagina)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
-                    print(error.descripcion)
+                    print("Error al obtener películas (página \(pagina)): \(error)")
+                        case .finished:
+                    break
+                }
+            }, receiveValue: { response in
+                // Aquí debes actualizar la propiedad 'peliculas'
+                self.peliculas.append(contentsOf: response.results) 
+                self.filterPeliculas(searchText: self.searchValue)
+            })
+            .store(in: &anyCancellable)
+    }
+    
+    private func filterPeliculas(searchText: String) {
+        if searchText.isEmpty {
+            filteredPeliculas = peliculas
+        } else {
+            filteredPeliculas = peliculas.filter { pelicula in
+                pelicula.title.localizedCaseInsensitiveContains(searchText) ||
+                pelicula.overview.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+    }
+    
+    func buscarPeliculas(query: String) {
+        peliculas = []
+        peliculasProviderProtocol.buscarPeliculas(query: query) 
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    print("Error al buscar películas: \(error)")
                 case .finished:
                     break
                 }
-            }, receiveValue: { [weak self] response in
-                self?.peliculas.append(contentsOf: response.results)
+            }, receiveValue: { response in
+                self.peliculas = response.results
+                self.filterPeliculas(searchText: query)
             })
             .store(in: &anyCancellable)
     }

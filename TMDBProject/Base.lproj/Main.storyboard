@@ -16,24 +16,30 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="150" estimatedRowHeight="1" sectionHeaderHeight="1" estimatedSectionHeaderHeight="1" sectionFooterHeight="1" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gjc-lu-DdY" userLabel="Tv">
-                                <rect key="frame" x="0.0" y="103" width="393" height="715"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="150" estimatedRowHeight="1" sectionHeaderHeight="1" estimatedSectionHeaderHeight="1" sectionFooterHeight="1" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gjc-lu-DdY" userLabel="Tv">
+                                <rect key="frame" x="0.0" y="147" width="393" height="671"/>
                                 <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <sections/>
                             </tableView>
+                            <searchBar contentMode="redraw" id="92B-3S-ViR">
+                                <rect key="frame" x="0.0" y="103" width="393" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="gjc-lu-DdY" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="LUQ-Ps-vgK"/>
-                            <constraint firstItem="gjc-lu-DdY" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="MIb-mE-aBD"/>
-                            <constraint firstItem="gjc-lu-DdY" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="j3k-Te-N3e"/>
-                            <constraint firstItem="gjc-lu-DdY" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="sIk-FX-evY"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="gjc-lu-DdY" secondAttribute="bottom" id="0l3-5A-RCD"/>
+                            <constraint firstItem="gjc-lu-DdY" firstAttribute="trailing" secondItem="92B-3S-ViR" secondAttribute="trailing" id="L8M-7p-rW4"/>
+                            <constraint firstItem="gjc-lu-DdY" firstAttribute="top" secondItem="92B-3S-ViR" secondAttribute="bottom" id="Z1u-af-fP8"/>
+                            <constraint firstItem="gjc-lu-DdY" firstAttribute="leading" secondItem="92B-3S-ViR" secondAttribute="leading" id="yFX-nk-7nP"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Peliculas" id="Ukz-LS-hQf"/>
                     <connections>
                         <outlet property="Tv" destination="gjc-lu-DdY" id="L1q-p7-gtR"/>
+                        <outlet property="mySearchBar" destination="92B-3S-ViR" id="e1G-xb-4R3"/>
                         <segue destination="ZnT-2c-kDj" kind="show" identifier="detalle" id="Xz1-ce-t3f"/>
                     </connections>
                 </viewController>

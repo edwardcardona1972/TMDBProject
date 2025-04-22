@@ -29,20 +29,33 @@ class DetalleViewController: UIViewController {
     }
     
     func subscription() {
-        viewModel.reloadData.sink { _ in} receiveValue: { _ in
-            guard let details = self.viewModel.detallePelicula else { return }
-            self.movieTitle.text = details.title
-            self.originContry.text = details.origin_country[0] ?? ""
-            self.budget.text = "Budget: \(details.budget ?? 0)"
-            self.revenue.text = "Revenue: \(details.revenue ?? 0)"
-            self.popularity.text = "Popularity: \(details.popularity ?? 0)"
-            self.adult.text = "Adult: \(details.adult)"
-            
-            if let poster_path = details.poster_path {
-                self.loadImage(posterPath: poster_path)
+        viewModel.reloadData
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("Finished loading details")
+                case .failure(let error):
+                    print("Error loading details: \(error)")
+                    // Handle the error appropriately, e.g., show an alert
+                }
+            } receiveValue: { _ in
+                guard let details = self.viewModel.detallePelicula else { return }
+                self.movieTitle.text = details.title
+                if let firstCountry = details.origin_country.first {
+                    self.originContry.text = firstCountry
+                } else {
+                    self.originContry.text = "N/A"
+                }
+                self.budget.text = "Budget: \(details.budget ?? 0)"
+                self.revenue.text = "Revenue: \(details.revenue ?? 0)"
+                self.popularity.text = "Popularity: \(details.popularity ?? 0)"
+                self.adult.text = "Adult: \(details.adult ? "Yes" : "No")"
+                
+                if let poster_path = details.poster_path {
+                    self.loadImage(posterPath: poster_path)
+                }
             }
-        }
-        .store(in: &cancellables)
+            .store(in: &cancellables)
     }
     func loadImage(posterPath: String) {
         let urlString = "https://image.tmdb.org/t/p/w500/\(posterPath)"

@@ -10,28 +10,29 @@ import Combine
 
 class DetailsViewModel {
     
-    var peliculasProviderProtocol: PeliculasProviderProtocol
+    var peliculasProviderProtocol: peliculasProviderProtocol
     var detallePelicula: ResponseDetallesPelicula?
     var reloadData = PassthroughSubject<Void, Error>()
     var anyCancellables: Set<AnyCancellable> = []
     
-    init(peliculasProviderProtocol: PeliculasProviderProtocol) {
+    init(peliculasProviderProtocol: peliculasProviderProtocol) {
         self.peliculasProviderProtocol = peliculasProviderProtocol
     }
     
     func getDetallesPelicula(peliculaId: String) {
-        peliculasProviderProtocol.getDetallesPelicula(peliculaId: peliculaId).sink(receiveCompletion: { completion in
-            switch completion {
-            case .failure(let error):
-                print(error.descripcion)
-                self.reloadData.send(completion: .failure(error))
-            case .finished:
-                break
-            }
-        }, receiveValue: {response in
-            self.detallePelicula = response
-            self.reloadData.send(())
-        })
-        .store(in: &anyCancellables)
+        peliculasProviderProtocol.getDetallesPelicula(peliculaId: peliculaId)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    print(error.localizedDescription)
+                    self.reloadData.send(completion: .failure(error))
+                case .finished:
+                    break
+                }
+            }, receiveValue: {response in
+                self.detallePelicula = response
+                self.reloadData.send(())
+            })
+            .store(in: &anyCancellables)
     }
 }

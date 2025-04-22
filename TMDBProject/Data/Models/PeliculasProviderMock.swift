@@ -9,8 +9,9 @@
 import Foundation
 import Combine
 
-class PeliculasProviderMock : PeliculasProviderProtocol {
-    func getPeliculas(page: String) -> AnyPublisher<ResponseMasPopulares, PeliculaError> {
+class PeliculasProviderMock : peliculasProviderProtocol {
+    
+    func obtenerPeliculas(page: String) -> AnyPublisher<ResponseMasPopulares, PeliculaError> {
         guard let model = Utils.parseJson(jsonName: "maspopulares", model: ResponseMasPopulares.self) else {
             return Fail(error: PeliculaError.respuestaInvalida).eraseToAnyPublisher()
         }
@@ -27,5 +28,11 @@ class PeliculasProviderMock : PeliculasProviderProtocol {
             .setFailureType(to: PeliculaError.self)
             .eraseToAnyPublisher()
     }
+    
+    func buscarPeliculas(query: String) -> AnyPublisher<ResponseMasPopulares, PeliculaError> {
+          let emptyResponse = ResponseMasPopulares(page: 1, results: [])
+          return Just(emptyResponse)
+              .setFailureType(to: PeliculaError.self)
+              .eraseToAnyPublisher()
+       }
 }
-
