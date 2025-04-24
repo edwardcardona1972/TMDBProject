@@ -51,7 +51,7 @@ class PeliculasProviderNetwork: peliculasProviderProtocol {
         let url = URL(string: "https://api.themoviedb.org/3/movie/\(peliculaId)")!
         var components = URLComponents(url: url, resolvingAgainstBaseURL: true)!
         let queryItems: [URLQueryItem] = [
-            URLQueryItem(name: "language", value: "en-US")
+            URLQueryItem(name: "language", value: "es-ES")
         ]
         components.queryItems = queryItems
         
@@ -83,7 +83,7 @@ class PeliculasProviderNetwork: peliculasProviderProtocol {
             let url = URL(string: "https://api.themoviedb.org/3/search/movie")!
             var components = URLComponents(url: url, resolvingAgainstBaseURL: true)!
             let queryItems: [URLQueryItem] = [
-                URLQueryItem(name: "language", value: "en-US"),
+                URLQueryItem(name: "language", value: "es-ES"),
                 URLQueryItem(name: "query", value: query)
             ]
             components.queryItems = queryItems

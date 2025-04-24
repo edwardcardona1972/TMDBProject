@@ -10,6 +10,7 @@ import Combine
 class TableViewCell2: UITableViewCell {
     @IBOutlet weak var imagenPelicula: UIImageView!
     @IBOutlet weak var titulosPelicula: UILabel!
+    @IBOutlet weak var fechaEstreno: UILabel!
     @IBOutlet weak var detallesPelicula: UILabel!
     
     private var cancellable: AnyCancellable?
@@ -29,5 +30,6 @@ class TableViewCell2: UITableViewCell {
                 self?.imagenPelicula.image = image ?? UIImage(named: "placeholder")
             }
         viewModel.loadImage(from: pelicula.poster_path, at: indexPath)
+        fechaEstreno.text = pelicula.release_date
     }
 }

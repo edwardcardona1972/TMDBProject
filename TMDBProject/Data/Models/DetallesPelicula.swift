@@ -27,7 +27,7 @@ struct ResponseDetallesPelicula: Decodable {
     let tagline: String?
     let title: String?
     let video: Bool?
-    let vote_average: Double?
+    let vote_average: Double
     let vote_count: Int?
 }
 

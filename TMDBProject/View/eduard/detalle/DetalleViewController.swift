@@ -12,18 +12,28 @@ class DetalleViewController: UIViewController {
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var originContry: UILabel!
-    @IBOutlet weak var budget: UILabel!
+    @IBOutlet weak var voteAverage: UILabel!
     @IBOutlet weak var revenue: UILabel!
     @IBOutlet weak var popularity: UILabel!
     @IBOutlet weak var adult: UILabel!
     @IBOutlet weak var movieTitle: UILabel!
+    @IBOutlet weak var releaseDate: UILabel!
+    @IBOutlet weak var budget: UILabel!
+    @IBOutlet weak var overView: UILabel!
     
+    
+    var emojiSequences = ["😀 😍 🥱", "😍 🥱 😀", "🥱 😀 😍"]
+    var currentEmojiIndex = 0
     var idPelicula : Int = 0
     var cancellables: Set<AnyCancellable> = []
     var viewModel: DetailsViewModel = DetailsViewModel(peliculasProviderProtocol: PeliculasProviderNetwork())
+    var isAnimatingEmojis = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        voteAverage.isUserInteractionEnabled = true
+                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleVoteAverageTap))
+                voteAverage.addGestureRecognizer(tapGesture)
         subscription()
         viewModel.getDetallesPelicula(peliculaId: String(idPelicula))
     }
@@ -36,27 +46,73 @@ class DetalleViewController: UIViewController {
                     print("Finished loading details")
                 case .failure(let error):
                     print("Error loading details: \(error)")
-                    // Handle the error appropriately, e.g., show an alert
                 }
             } receiveValue: { _ in
                 guard let details = self.viewModel.detallePelicula else { return }
                 self.movieTitle.text = details.title
-                if let firstCountry = details.origin_country.first {
-                    self.originContry.text = firstCountry
+                if let firstCountryCode = details.origin_country.first {
+                    if let countryName = Locale.current.localizedString(forRegionCode: firstCountryCode!) {
+                        self.originContry.text = "country of origin: \(countryName)"
+                    } else {
+                        self.originContry.text = "country of origin: \(String(describing: firstCountryCode))"
+                    }
                 } else {
-                    self.originContry.text = "N/A"
+                    self.originContry.text = "País de origen: N/A"
                 }
-                self.budget.text = "Budget: \(details.budget ?? 0)"
+                self.voteAverage.text = "User 😀😍🥱\nrating: (\(details.vote_average))"
                 self.revenue.text = "Revenue: \(details.revenue ?? 0)"
+                self.budget.text = "Budget: \(details.budget ?? 0)"
                 self.popularity.text = "Popularity: \(details.popularity ?? 0)"
                 self.adult.text = "Adult: \(details.adult ? "Yes" : "No")"
                 
+                self.overView.text = details.overview ?? "No description available"
+                self.overView.isEditable = false
+                self.overView.isSelectable = false
+                self.overView.showsVerticalScrollIndicator = true
+                
+                if let releaseDateString = details.release_date {
+                               let dateFormatter = DateFormatter()
+                               dateFormatter.dateFormat = "yyyy-MM-dd"
+                               if let date = dateFormatter.date(from: releaseDateString) {
+                                   let yearFormatter = DateFormatter()
+                                   yearFormatter.dateFormat = "dd MMMM yyyy"
+                                   self.releaseDate.text = yearFormatter.string(from: date)
+                               } else {
+                                   self.releaseDate.text = "N/A"
+                                   print("Warning: Could not parse release date string: \(releaseDateString)")
+                               }
+                           } else {
+                               self.releaseDate.text = "N/A"
+                           }
                 if let poster_path = details.poster_path {
                     self.loadImage(posterPath: poster_path)
                 }
             }
             .store(in: &cancellables)
     }
+    @objc func handleVoteAverageTap() {
+            if !isAnimatingEmojis {
+                isAnimatingEmojis = true
+                animateVoteEmojis()
+            }
+        }
+
+        func animateVoteEmojis() {
+            UIView.transition(with: self.voteAverage,
+                              duration: 0.5,
+                              options: .curveEaseInOut,
+                              animations: {
+                                  let currentEmojis = self.emojiSequences[self.currentEmojiIndex]
+                                  self.voteAverage.text = "User \(currentEmojis)\n rating: (\(String(describing: self.viewModel.detallePelicula?.vote_average ?? 0)))"
+                                  self.currentEmojiIndex = (self.currentEmojiIndex + 1) % self.emojiSequences.count
+                              },
+                              completion: { _ in
+                                  DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                      self.isAnimatingEmojis = false
+                                  }
+                              })
+        }
+    
     func loadImage(posterPath: String) {
         let urlString = "https://image.tmdb.org/t/p/w500/\(posterPath)"
         guard let url = URL(string: urlString) else {
