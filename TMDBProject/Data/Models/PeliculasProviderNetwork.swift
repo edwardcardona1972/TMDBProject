@@ -17,7 +17,7 @@ class PeliculasProviderNetwork: peliculasProviderProtocol {
         let url = URL(string: "https://api.themoviedb.org/3/movie/popular")!
         var components = URLComponents(url: url, resolvingAgainstBaseURL: true)!
         let queryItems: [URLQueryItem] = [
-            URLQueryItem(name: "language", value: "en-US"),
+            URLQueryItem(name: "language", value: "es-ES"),
             URLQueryItem(name: "page", value: page),
         ]
         components.queryItems = queryItems

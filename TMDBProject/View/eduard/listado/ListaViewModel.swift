@@ -24,7 +24,7 @@ class ListaViewModel {
     let imageLoadedPublisher = PassthroughSubject<(UIImage?, IndexPath), Never>()
     
     init(peliculasProviderProtocol: peliculasProviderProtocol) {
-            self.peliculasProviderProtocol = peliculasProviderProtocol
+        self.peliculasProviderProtocol = peliculasProviderProtocol
         $searchValue
             .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .removeDuplicates()
@@ -41,12 +41,12 @@ class ListaViewModel {
                 switch completion {
                 case .failure(let error):
                     print("Error al obtener películas (página \(pagina)): \(error)")
-                        case .finished:
+                case .finished:
                     break
                 }
             }, receiveValue: { response in
                 // Aquí debes actualizar la propiedad 'peliculas'
-                self.peliculas.append(contentsOf: response.results) 
+                self.peliculas.append(contentsOf: response.results)
                 self.filterPeliculas(searchText: self.searchValue)
             })
             .store(in: &anyCancellable)
@@ -65,7 +65,7 @@ class ListaViewModel {
     
     func buscarPeliculas(query: String) {
         peliculas = []
-        peliculasProviderProtocol.buscarPeliculas(query: query) 
+        peliculasProviderProtocol.buscarPeliculas(query: query)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {

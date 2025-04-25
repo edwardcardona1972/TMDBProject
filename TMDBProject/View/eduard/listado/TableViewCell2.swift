@@ -14,6 +14,13 @@ class TableViewCell2: UITableViewCell {
     @IBOutlet weak var detallesPelicula: UILabel!
     
     private var cancellable: AnyCancellable?
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        layer.borderColor = UIColor.lightGray.cgColor
+        layer.borderWidth = 1.0
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         imagenPelicula.image = UIImage(named: "placeholder")

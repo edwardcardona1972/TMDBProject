@@ -19,9 +19,8 @@ class DetalleViewController: UIViewController {
     @IBOutlet weak var movieTitle: UILabel!
     @IBOutlet weak var releaseDate: UILabel!
     @IBOutlet weak var budget: UILabel!
-    @IBOutlet weak var overView: UILabel!
-    
-    
+    @IBOutlet weak var overView: UITextView!
+   
     var emojiSequences = ["😀 😍 🥱", "😍 🥱 😀", "🥱 😀 😍"]
     var currentEmojiIndex = 0
     var idPelicula : Int = 0
@@ -32,8 +31,8 @@ class DetalleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         voteAverage.isUserInteractionEnabled = true
-                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleVoteAverageTap))
-                voteAverage.addGestureRecognizer(tapGesture)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleVoteAverageTap))
+        voteAverage.addGestureRecognizer(tapGesture)
         subscription()
         viewModel.getDetallesPelicula(peliculaId: String(idPelicula))
     }
@@ -52,66 +51,64 @@ class DetalleViewController: UIViewController {
                 self.movieTitle.text = details.title
                 if let firstCountryCode = details.origin_country.first {
                     if let countryName = Locale.current.localizedString(forRegionCode: firstCountryCode!) {
-                        self.originContry.text = "country of origin: \(countryName)"
+                        self.originContry.text = "Country of Origin: \(countryName)"
                     } else {
-                        self.originContry.text = "country of origin: \(String(describing: firstCountryCode))"
+                        self.originContry.text = "Country of Origin: \(String(describing: firstCountryCode))"
                     }
                 } else {
                     self.originContry.text = "País de origen: N/A"
                 }
-                self.voteAverage.text = "User 😀😍🥱\nrating: (\(details.vote_average))"
+                self.voteAverage.text = "User rating 😀😍🥱 : (\(details.vote_average))"
                 self.revenue.text = "Revenue: \(details.revenue ?? 0)"
                 self.budget.text = "Budget: \(details.budget ?? 0)"
                 self.popularity.text = "Popularity: \(details.popularity ?? 0)"
                 self.adult.text = "Adult: \(details.adult ? "Yes" : "No")"
                 
                 self.overView.text = details.overview ?? "No description available"
-                self.overView.isEditable = false
-                self.overView.isSelectable = false
-                self.overView.showsVerticalScrollIndicator = true
                 
                 if let releaseDateString = details.release_date {
-                               let dateFormatter = DateFormatter()
-                               dateFormatter.dateFormat = "yyyy-MM-dd"
-                               if let date = dateFormatter.date(from: releaseDateString) {
-                                   let yearFormatter = DateFormatter()
-                                   yearFormatter.dateFormat = "dd MMMM yyyy"
-                                   self.releaseDate.text = yearFormatter.string(from: date)
-                               } else {
-                                   self.releaseDate.text = "N/A"
-                                   print("Warning: Could not parse release date string: \(releaseDateString)")
-                               }
-                           } else {
-                               self.releaseDate.text = "N/A"
-                           }
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd"
+                    if let date = dateFormatter.date(from: releaseDateString) {
+                        let yearFormatter = DateFormatter()
+                        yearFormatter.dateFormat = "dd MMMM yyyy"
+                        self.releaseDate.text = yearFormatter.string(from: date)
+                    } else {
+                        self.releaseDate.text = "N/A"
+                        print("Warning: Could not parse release date string: \(releaseDateString)")
+                    }
+                } else {
+                    self.releaseDate.text = "N/A"
+                }
                 if let poster_path = details.poster_path {
                     self.loadImage(posterPath: poster_path)
                 }
             }
             .store(in: &cancellables)
     }
+    
     @objc func handleVoteAverageTap() {
-            if !isAnimatingEmojis {
-                isAnimatingEmojis = true
-                animateVoteEmojis()
+        if !isAnimatingEmojis {
+            isAnimatingEmojis = true
+            animateVoteEmojis()
+        }
+    }
+    
+    func animateVoteEmojis() {
+        UIView.transition(with: self.voteAverage,
+                          duration: 0.5,
+                          options: .curveEaseInOut,
+                          animations: {
+            let currentEmojis = self.emojiSequences[self.currentEmojiIndex]
+            self.voteAverage.text = "User rating\(currentEmojis): (\(String(describing: self.viewModel.detallePelicula?.vote_average ?? 0)))"
+            self.currentEmojiIndex = (self.currentEmojiIndex + 1) % self.emojiSequences.count
+        },
+                          completion: { _ in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                self.isAnimatingEmojis = false
             }
-        }
-
-        func animateVoteEmojis() {
-            UIView.transition(with: self.voteAverage,
-                              duration: 0.5,
-                              options: .curveEaseInOut,
-                              animations: {
-                                  let currentEmojis = self.emojiSequences[self.currentEmojiIndex]
-                                  self.voteAverage.text = "User \(currentEmojis)\n rating: (\(String(describing: self.viewModel.detallePelicula?.vote_average ?? 0)))"
-                                  self.currentEmojiIndex = (self.currentEmojiIndex + 1) % self.emojiSequences.count
-                              },
-                              completion: { _ in
-                                  DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                                      self.isAnimatingEmojis = false
-                                  }
-                              })
-        }
+        })
+    }
     
     func loadImage(posterPath: String) {
         let urlString = "https://image.tmdb.org/t/p/w500/\(posterPath)"

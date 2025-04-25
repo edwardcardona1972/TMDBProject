@@ -9,7 +9,6 @@ import Combine
 
 class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
-    
     @IBOutlet weak var Tv: UITableView!
     @IBOutlet weak var mySearchBar: UISearchBar!
     
@@ -31,7 +30,6 @@ class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDat
         Tv.delegate = self
         Tv.dataSource = self
         mySearchBar.delegate = self
-        
     }
     
     func subscriptions() {
@@ -57,6 +55,7 @@ class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDat
             }
         }
     }
+    
     // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.filteredPeliculas.count
@@ -88,6 +87,7 @@ class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
 }
+
 extension ListaViewController {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         isSearching = !searchText.isEmpty
