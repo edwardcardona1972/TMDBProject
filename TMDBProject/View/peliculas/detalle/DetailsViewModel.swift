@@ -10,12 +10,12 @@ import Combine
 
 class DetailsViewModel {
     
-    var peliculasProviderProtocol: peliculasProviderProtocol
+    var peliculasProviderProtocol: PeliculasProviderProtocol
     var detallePelicula: ResponseDetallesPelicula?
     var reloadData = PassthroughSubject<Void, Error>()
     var anyCancellables: Set<AnyCancellable> = []
     
-    init(peliculasProviderProtocol: peliculasProviderProtocol) {
+    init(peliculasProviderProtocol: PeliculasProviderProtocol) {
         self.peliculasProviderProtocol = peliculasProviderProtocol
     }
     

@@ -1,5 +1,5 @@
 //
-//  TableViewCell2.swift
+//  TableViewCellPelicula.swift
 //  TMDBProject
 //
 //  Created by Eduard Alexis Cardona Grajales on 9/4/25.
@@ -7,7 +7,7 @@
 import UIKit
 import Combine
 
-class TableViewCell2: UITableViewCell {
+class TableViewCellPelicula: UITableViewCell {
     @IBOutlet weak var imagenPelicula: UIImageView!
     @IBOutlet weak var titulosPelicula: UILabel!
     @IBOutlet weak var fechaEstreno: UILabel!
@@ -23,20 +23,21 @@ class TableViewCell2: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        imagenPelicula.image = UIImage(named: "placeholder")
         cancellable?.cancel()
         cancellable = nil
     }
     
-    func configure(with pelicula: Pelicula, viewModel: ListaViewModel, indexPath: IndexPath) {
-        imagenPelicula.image = UIImage(named: "placeholder")
-        cancellable = viewModel.imageLoadedPublisher
-            .receive(on: DispatchQueue.main)
-            .filter { $0.1 == indexPath }
-            .sink { [weak self] (image, indexPath) in
-                self?.imagenPelicula.image = image ?? UIImage(named: "placeholder")
-            }
-        viewModel.loadImage(from: pelicula.poster_path, at: indexPath)
+    func configure(pelicula: Pelicula) {
+        titulosPelicula.text = pelicula.title
         fechaEstreno.text = pelicula.release_date
+        detallesPelicula.text = pelicula.overview
+        let imageUrl = URL(string: "https://image.tmdb.org/t/p/w200\(pelicula.poster_path)")!
+        cancellable = URLSession.shared.dataTaskPublisher(for: imageUrl)
+            .receive(on: DispatchQueue.main)
+            .map { UIImage(data: $0.data) }
+            .sink(receiveCompletion: { completion in
+            }, receiveValue: { [weak self] image in
+                self?.imagenPelicula.image = image
+            })
     }
 }

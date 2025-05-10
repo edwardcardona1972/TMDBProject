@@ -12,9 +12,10 @@ class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDat
     @IBOutlet weak var Tv: UITableView!
     @IBOutlet weak var mySearchBar: UISearchBar!
     
+   
     private var selectedIndexPathForSegue: IndexPath?
     private var cellSubscriptions: [IndexPath: AnyCancellable] = [:]
-    var peliculasProvider: peliculasProviderProtocol = PeliculasProviderNetwork()
+    var peliculasProvider: PeliculasProviderProtocol = PeliculasProviderNetwork()
     var viewModel: ListaViewModel!
     var anyCancellables: Set<AnyCancellable> = []
     var pagina: Int = 1
@@ -26,7 +27,7 @@ class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDat
         viewModel = ListaViewModel(peliculasProviderProtocol: peliculasProvider)
         subscriptions()
         viewModel.getPeliculas(pagina: String(pagina))
-        Tv.register(UINib(nibName: "TableViewCell2", bundle: nil), forCellReuseIdentifier: "celda")
+        Tv.register(UINib(nibName: "TableViewCellPelicula", bundle: nil), forCellReuseIdentifier: "celda")
         Tv.delegate = self
         Tv.dataSource = self
         mySearchBar.delegate = self
@@ -62,16 +63,11 @@ class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "celda", for: indexPath) as? TableViewCell2 else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "celda", for: indexPath) as? TableViewCellPelicula else {
             fatalError("No se pudo crear la celda")
         }
         let pelicula = viewModel.filteredPeliculas[indexPath.row]
-        cell.titulosPelicula.text = pelicula.title
-        cell.detallesPelicula.text = pelicula.overview
-        cell.imagenPelicula.image = UIImage(named: "placeholder")
-        cellSubscriptions[indexPath]?.cancel()
-        cellSubscriptions[indexPath] = nil
-        cell.configure(with: pelicula, viewModel: viewModel, indexPath: indexPath)
+        cell.configure(pelicula: pelicula)
         return cell
     }
     

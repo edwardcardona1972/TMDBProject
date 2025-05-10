@@ -8,14 +8,8 @@ import UIKit
 import Combine
 import Foundation
 
-protocol PeliculasProviderProtocol {
-    func obtenerPeliculas(pagina: String) -> AnyPublisher<ResponseMasPopulares, PeliculaError>
-    func getDetallesPelicula(peliculaId: String) -> AnyPublisher<ResponseDetallesPelicula, PeliculaError>
-    func buscarPeliculas(query: String) -> AnyPublisher<ResponseMasPopulares, PeliculaError>
-}
-
 class ListaViewModel {
-    let peliculasProviderProtocol: peliculasProviderProtocol
+    let peliculasProviderProtocol: PeliculasProviderProtocol
     @Published var peliculas: [Pelicula] = []
     @Published var searchValue: String = ""
     @Published var filteredPeliculas: [Pelicula] = []
@@ -23,7 +17,7 @@ class ListaViewModel {
     private var anyCancellable: Set<AnyCancellable> = []
     let imageLoadedPublisher = PassthroughSubject<(UIImage?, IndexPath), Never>()
     
-    init(peliculasProviderProtocol: peliculasProviderProtocol) {
+    init(peliculasProviderProtocol: PeliculasProviderProtocol) {
         self.peliculasProviderProtocol = peliculasProviderProtocol
         $searchValue
             .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
