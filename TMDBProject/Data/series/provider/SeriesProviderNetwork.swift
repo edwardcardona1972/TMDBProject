@@ -49,9 +49,18 @@ class SeriesProviderNetwork: SeriesProviderProtocol {
             .eraseToAnyPublisher()
     }
     
-    /**func obtenerDetalleSeries(idSerie: String) -> AnyPublisher<ResponseDetallesSerie, ApiError> {
+    func obtenerDetalleSeries(idSerie: String) -> AnyPublisher<ResponseDetallesSerie, ApiError> {
         let request = CommonData.obtainRequest(withEndPoint: "tv/\(idSerie)")
-        return ApiError.invalidURL
-    }**/
+        return urlSession.dataTaskPublisher(for: request).tryMap { data, response in
+                guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
+                    throw ApiError.respuestaInvalida
+                }
+                return data
+            }
+            .decode(type: ResponseDetallesSerie.self, decoder: JSONDecoder())
+            .mapError(handleSeriesError)
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+        }
     
 }

@@ -10,5 +10,5 @@ import Combine
 protocol ActoresProviderProtocol {
     func obtenerActoresPopulares() -> AnyPublisher<ResponseActoresPopulares, ApiError>
     
-    //func obtenerActorDetalle(idActor: String) -> AnyPublisher<ResponseDetallesActor, ApiError>
+    func obtenerActorDetalle(idActor: String) -> AnyPublisher<ResponseDetallesActor, ApiError>
 }

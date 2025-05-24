@@ -50,9 +50,18 @@ class ActoresProviderNetwork: ActoresProviderProtocol {
             .eraseToAnyPublisher()
     }
     
-    /**func obtenerActorDetalle(idActor: String) -> AnyPublisher<ResponseDetallesActor, ApiError> {
+    func obtenerActorDetalle(idActor: String) -> AnyPublisher<ResponseDetallesActor, ApiError> {
         let request = CommonData.obtainRequest(withEndPoint: "person/\(idActor)")
-        return ApiError.invalidURL
-    }**/
+        return urlSession.dataTaskPublisher(for: request).tryMap { data, response in
+            guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
+                throw ApiError.respuestaInvalida
+            }
+            return data
+        }
+        .decode(type: ResponseDetallesActor.self, decoder: JSONDecoder())
+        .mapError(handleActoresError)
+        .receive(on: DispatchQueue.main)
+        .eraseToAnyPublisher()
+    }
 }
 

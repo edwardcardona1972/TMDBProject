@@ -98,9 +98,17 @@ class HomeViewController: UIViewController {
                 vc.idPelicula = homeViewModel.listaDePeliculas[indexPath.row].id
             }
         } else if segue.identifier == "detalleSerie" {
-            
+            if let vc = segue.destination as? SerieDetalleViewController,
+               let indexPath = selectedIndexPathForSegue,
+               indexPath.row < homeViewModel.listaDeSeries.count {
+                vc.idSerie = homeViewModel.listaDeSeries[indexPath.row].id
+            }
         } else if segue.identifier == "detalleActor" {
-            
+            if let vc = segue.destination as? ActorDetalleViewController,
+               let indexPath = selectedIndexPathForSegue,
+               indexPath.row < homeViewModel.listaDeActores.count {
+                vc.idActor = homeViewModel.listaDeActores[indexPath.row].id
+            }
         }
     }
 }

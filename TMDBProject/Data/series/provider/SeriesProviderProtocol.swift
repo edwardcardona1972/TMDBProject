@@ -11,6 +11,6 @@ import Combine
 protocol SeriesProviderProtocol {
     func obtenerSeriesPopulares() -> AnyPublisher<ResponseSeriesPopulares, ApiError>
     
-    //func obtenerDetalleSeries(idSerie: String) -> AnyPublisher<ResponseDetallesSerie, ApiError>
+    func obtenerDetalleSeries(idSerie: String) -> AnyPublisher<ResponseDetallesSerie, ApiError>
 }
 

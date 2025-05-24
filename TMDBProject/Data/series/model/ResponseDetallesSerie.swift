@@ -9,9 +9,10 @@ import Foundation
 
 struct ResponseDetallesSerie: Decodable {
     let id: Int
-    let original_language: String
-    let original_name: String
-    let overview: String
+    let original_language: String?
+    let name: String
+    let original_name: String?
+    let overview: String?
     let popularity: Double
     let poster_path: String?
     let first_air_date: String
