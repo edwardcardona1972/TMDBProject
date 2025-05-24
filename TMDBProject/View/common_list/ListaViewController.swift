@@ -16,17 +16,23 @@ class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDat
     private var selectedIndexPathForSegue: IndexPath?
     private var cellSubscriptions: [IndexPath: AnyCancellable] = [:]
     var peliculasProvider: PeliculasProviderProtocol = PeliculasProviderNetwork()
+    var seriesProvider: SeriesProviderProtocol = SeriesProviderNetwork()
+    var actoresProvider: ActoresProviderProtocol = ActoresProviderNetwork()
+    
     var viewModel: ListaViewModel!
     var anyCancellables: Set<AnyCancellable> = []
-    var pagina: Int = 1
     var isSearching: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        viewModel = ListaViewModel(peliculasProviderProtocol: peliculasProvider)
+        viewModel = ListaViewModel(
+            peliculasProviderProtocol: peliculasProvider,
+            seriesProviderProtocol: seriesProvider,
+            actoresProviderProtocol: actoresProvider
+        )
         subscriptions()
-        viewModel.getPeliculas(pagina: String(pagina))
+        viewModel.getPeliculas()
         Tv.register(UINib(nibName: "TableViewCellPelicula", bundle: nil), forCellReuseIdentifier: "celda")
         Tv.delegate = self
         Tv.dataSource = self
@@ -44,11 +50,11 @@ class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedIndexPathForSegue = indexPath
-        performSegue(withIdentifier: "detalle", sender: self)
+        performSegue(withIdentifier: "detallePelicula", sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "detalle" {
+        if segue.identifier == "detallePelicula" {
             if let vc = segue.destination as? DetalleViewController,
                let indexPath = selectedIndexPathForSegue,
                indexPath.row < viewModel.filteredPeliculas.count {
@@ -78,8 +84,7 @@ class ListaViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if !isSearching && indexPath.row == viewModel.filteredPeliculas.count - 1 {
-            pagina += 1
-            viewModel.getPeliculas(pagina: String(pagina))
+            viewModel.getPeliculas()
         }
     }
 }
@@ -95,7 +100,7 @@ extension ListaViewController {
         isSearching = false
         viewModel.searchValue = ""
         searchBar.resignFirstResponder()
-        viewModel.getPeliculas(pagina: String(1))
+        viewModel.getPeliculas()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -104,7 +109,7 @@ extension ListaViewController {
             isSearching = true
             viewModel.buscarPeliculas(query: searchText)
         } else {
-            viewModel.getPeliculas(pagina: String(1))
+            viewModel.getPeliculas()
             isSearching = false
         }
     }

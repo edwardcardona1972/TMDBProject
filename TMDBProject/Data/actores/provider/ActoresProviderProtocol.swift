@@ -8,5 +8,7 @@ import Foundation
 import Combine
 
 protocol ActoresProviderProtocol {
-    func obtenerActoresPopulares(pagina: String) -> AnyPublisher<ResponseActoresPopulares, ApiError>
+    func obtenerActoresPopulares() -> AnyPublisher<ResponseActoresPopulares, ApiError>
+    
+    //func obtenerActorDetalle(idActor: String) -> AnyPublisher<ResponseDetallesActor, ApiError>
 }

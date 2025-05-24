@@ -9,6 +9,8 @@ import Foundation
 import Combine
 
 protocol SeriesProviderProtocol {
-    func obtenerSeriesPopulares(pagina: String) -> AnyPublisher<ResponseSeriesPopulares, ApiError>
+    func obtenerSeriesPopulares() -> AnyPublisher<ResponseSeriesPopulares, ApiError>
+    
+    //func obtenerDetalleSeries(idSerie: String) -> AnyPublisher<ResponseDetallesSerie, ApiError>
 }
 

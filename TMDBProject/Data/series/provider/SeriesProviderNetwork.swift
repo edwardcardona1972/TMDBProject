@@ -12,6 +12,7 @@ class SeriesProviderNetwork: SeriesProviderProtocol {
     
     private let urlSession = URLSession.shared
     private let jsonDecoder = Utils.jsonDecoder
+    private var page = 1
     
     private func handleSeriesError(_ error: Error) -> ApiError {
         if let peliculaError = error as? ApiError {
@@ -24,22 +25,12 @@ class SeriesProviderNetwork: SeriesProviderProtocol {
         }
     }
     
-    func obtenerSeriesPopulares(pagina page: String) -> AnyPublisher<ResponseSeriesPopulares, ApiError> {
-        let url = URL(string: "https://api.themoviedb.org/3/tv/popular")!
-        var components = URLComponents(url: url, resolvingAgainstBaseURL: true)!
-        let queryItems: [URLQueryItem] = [
-            URLQueryItem(name: "language", value: "es-ES"),
-            URLQueryItem(name: "page", value: page),
+    func obtenerSeriesPopulares() -> AnyPublisher<ResponseSeriesPopulares, ApiError> {
+        let parameters: [String: Any] = [
+            "page": self.page
         ]
-        components.queryItems = queryItems
+        let request = CommonData.obtainRequest(withEndPoint: "tv/popular", parameters: parameters)
         
-        var request = URLRequest(url: components.url!)
-        request.httpMethod = "GET"
-        request.timeoutInterval = 10
-        request.allHTTPHeaderFields = [
-            "accept": "application/json",
-            "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMGViNDVjMDkyMTcxMGY2NDc1NTRjMzM2NjI4YTZmYSIsIm5iZiI6MTc0MjgzMzE0OS4zNjgsInN1YiI6IjY3ZTE4NWZkMzViZDI2YTdkOTRkZGJiZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.JXDIZ0RRxUHzoGkN2n9fr85zmhSwc9nRmlyTSCSST-Y"
-        ]
         return urlSession.dataTaskPublisher(for: request)
             .tryMap { data, response in
                 guard let urlResponse = response as? HTTPURLResponse, 200..<300 ~= urlResponse.statusCode else {
@@ -48,6 +39,7 @@ class SeriesProviderNetwork: SeriesProviderProtocol {
                 if let jsonString = String(data: data, encoding: .utf8) {
                     print("➡️ JSON Recibido (Series): \(jsonString)")
                 }
+                self.page = self.page + 1
                 return data
             }
             .decode(type: ResponseSeriesPopulares.self, decoder: jsonDecoder)
@@ -56,4 +48,10 @@ class SeriesProviderNetwork: SeriesProviderProtocol {
             }
             .eraseToAnyPublisher()
     }
+    
+    /**func obtenerDetalleSeries(idSerie: String) -> AnyPublisher<ResponseDetallesSerie, ApiError> {
+        let request = CommonData.obtainRequest(withEndPoint: "tv/\(idSerie)")
+        return ApiError.invalidURL
+    }**/
+    
 }

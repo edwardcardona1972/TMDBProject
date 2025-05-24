@@ -12,6 +12,7 @@ class ActoresProviderNetwork: ActoresProviderProtocol {
     
     private let urlSession = URLSession.shared
     private let jsonDecoder = Utils.jsonDecoder
+    private var page = 1
     
     private func handleActoresError(_ error: Error) -> ApiError {
         if let peliculaError = error as? ApiError {
@@ -25,22 +26,12 @@ class ActoresProviderNetwork: ActoresProviderProtocol {
         }
     }
     
-    func obtenerActoresPopulares(pagina: String) -> AnyPublisher<ResponseActoresPopulares, ApiError> {
-        let url = URL(string: "https://api.themoviedb.org/3/person/popular")!
-        var components = URLComponents(url: url, resolvingAgainstBaseURL: true)!
-        let queryItems: [URLQueryItem] = [
-            URLQueryItem(name: "language", value: "es-ES"),
-            URLQueryItem(name: "page", value: pagina),
+    func obtenerActoresPopulares() -> AnyPublisher<ResponseActoresPopulares, ApiError> {
+        let parameters: [String: Any] = [
+            "page": self.page
         ]
-        components.queryItems = queryItems
-        
-        var request = URLRequest(url: components.url!)
-        request.httpMethod = "GET"
-        request.timeoutInterval = 10
-        request.allHTTPHeaderFields = [
-            "accept": "application/json",
-            "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMGViNDVjMDkyMTcxMGY2NDc1NTRjMzM2NjI4YTZmYSIsIm5iZiI6MTc0MjgzMzE0OS4zNjgsInN1YiI6IjY3ZTE4NWZkMzViZDI2YTdkOTRkZGJiZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.JXDIZ0RRxUHzoGkN2n9fr85zmhSwc9nRmlyTSCSST-Y"
-        ]
+        let request = CommonData.obtainRequest(withEndPoint: "person/popular", parameters: parameters)
+
         return urlSession.dataTaskPublisher(for: request)
             .tryMap { data, response in
                 guard let urlResponse = response as? HTTPURLResponse, 200..<300 ~= urlResponse.statusCode else {
@@ -49,6 +40,7 @@ class ActoresProviderNetwork: ActoresProviderProtocol {
                 if let jsonString = String(data: data, encoding: .utf8) {
                     print("➡️ JSON Recibido (Actores): \(jsonString)")
                 }
+                self.page = self.page + 1
                 return data
             }
             .decode(type: ResponseActoresPopulares.self, decoder: jsonDecoder)
@@ -57,5 +49,10 @@ class ActoresProviderNetwork: ActoresProviderProtocol {
             }
             .eraseToAnyPublisher()
     }
+    
+    /**func obtenerActorDetalle(idActor: String) -> AnyPublisher<ResponseDetallesActor, ApiError> {
+        let request = CommonData.obtainRequest(withEndPoint: "person/\(idActor)")
+        return ApiError.invalidURL
+    }**/
 }
 

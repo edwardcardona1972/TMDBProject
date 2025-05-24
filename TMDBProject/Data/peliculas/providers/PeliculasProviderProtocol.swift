@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 protocol PeliculasProviderProtocol {
-    func obtenerPeliculas(page: String) -> AnyPublisher<ResponsePeliculasPopulares, ApiError>
+    func obtenerPeliculas() -> AnyPublisher<ResponsePeliculasPopulares, ApiError>
     func getDetallesPelicula(peliculaId: String) -> AnyPublisher<ResponseDetallesPelicula, ApiError>
     func buscarPeliculas(query: String) -> AnyPublisher<ResponsePeliculasPopulares, ApiError>
 }

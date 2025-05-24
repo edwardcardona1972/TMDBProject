@@ -29,7 +29,7 @@ class HomeViewModel: ObservableObject {
     }
     
     private func obtenerActoresPopulares() {
-        actoresProvider.obtenerActoresPopulares(pagina: "1")
+        actoresProvider.obtenerActoresPopulares()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion {
@@ -44,7 +44,7 @@ class HomeViewModel: ObservableObject {
     }
     
     private func obtenerSeriesPopulares() {
-        seriesProvider.obtenerSeriesPopulares(pagina: "1")
+        seriesProvider.obtenerSeriesPopulares()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion {
@@ -57,7 +57,7 @@ class HomeViewModel: ObservableObject {
     }
     
     private func obtenerPeliculasPopulares() {
-        peliculasProvider.obtenerPeliculas(page: "1")
+        peliculasProvider.obtenerPeliculas()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion {

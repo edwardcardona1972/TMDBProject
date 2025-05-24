@@ -15,6 +15,8 @@ class HomeViewController: UIViewController {
     private var homeViewModel: HomeViewModel!
     private var cancellables: Set<AnyCancellable> = []
     
+    private var selectedIndexPathForSegue: IndexPath?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -88,6 +90,19 @@ class HomeViewController: UIViewController {
         performSegue(withIdentifier:"Peliculas", sender: self)
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "detallePelicula" {
+            if let vc = segue.destination as? DetalleViewController,
+               let indexPath = selectedIndexPathForSegue,
+               indexPath.row < homeViewModel.listaDePeliculas.count {
+                vc.idPelicula = homeViewModel.listaDePeliculas[indexPath.row].id
+            }
+        } else if segue.identifier == "detalleSerie" {
+            
+        } else if segue.identifier == "detalleActor" {
+            
+        }
+    }
 }
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
@@ -120,6 +135,17 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         }
         return UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedIndexPathForSegue = indexPath
+        if tableView == actoresTableView {
+            performSegue(withIdentifier: "detalleActor", sender: self)
+        } else if tableView == peliculasTableView {
+            performSegue(withIdentifier: "detallePelicula", sender: self)
+        } else if tableView == seriesTableView {
+            performSegue(withIdentifier: "detalleSerie", sender: self)
+        }
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

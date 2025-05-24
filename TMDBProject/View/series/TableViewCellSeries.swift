@@ -17,7 +17,7 @@ class TableViewCellSeries: UITableViewCell {
 
     override func awakeFromNib() {
         layer.borderColor = UIColor.lightGray.cgColor
-        layer.borderWidth = 1.0
+        //layer.borderWidth = 1.0
         super.awakeFromNib()
     }
 

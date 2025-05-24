@@ -11,7 +11,7 @@ import Combine
 
 class PeliculasProviderMock : PeliculasProviderProtocol {
     
-    func obtenerPeliculas(page: String) -> AnyPublisher<ResponsePeliculasPopulares, ApiError> {
+    func obtenerPeliculas() -> AnyPublisher<ResponsePeliculasPopulares, ApiError> {
         guard let model = Utils.parseJson(jsonName: "maspopulares", model: ResponsePeliculasPopulares.self) else {
             return Fail(error: ApiError.respuestaInvalida).eraseToAnyPublisher()
         }

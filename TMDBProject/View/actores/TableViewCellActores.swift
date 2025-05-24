@@ -17,8 +17,8 @@ class ActoresTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        layer.borderColor = UIColor.lightGray.cgColor
-        layer.borderWidth = 1.0
+        //layer.borderColor = UIColor.lightGray.cgColor
+        //layer.borderWidth = 1.0
     }
     
     override func prepareForReuse() {
@@ -29,8 +29,7 @@ class ActoresTableViewCell: UITableViewCell {
     
     func configure(actor: Actor) {
         nombreActorLabel.text = actor.name
-        bibliografiaActor.text = "sample"
-        
+        bibliografiaActor.text = actor.popularity?.description
         let imageUrl = URL(string: "https://image.tmdb.org/t/p/w200\(actor.profile_path)")!
         cancellable = URLSession.shared.dataTaskPublisher(for: imageUrl)
             .receive(on: DispatchQueue.main)

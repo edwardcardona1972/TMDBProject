@@ -18,7 +18,7 @@ struct Serie: Decodable {
     let first_air_date: String?
     let genre_ids: [Int]?
     let id: Int
-    let name: String? // Hacerlo opcional
+    let name: String?
     let origin_country: [String]?
     let original_language: String?
     let original_name: String?
