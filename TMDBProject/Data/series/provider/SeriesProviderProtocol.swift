@@ -13,4 +13,3 @@ protocol SeriesProviderProtocol {
     
     func obtenerDetalleSeries(idSerie: String) -> AnyPublisher<ResponseDetallesSerie, ApiError>
 }
-

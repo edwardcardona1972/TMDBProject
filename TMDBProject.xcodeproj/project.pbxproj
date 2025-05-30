@@ -24,6 +24,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A045365F2DE330DE00754B71 /* TMDBProject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = TMDBProject.xcodeproj; sourceTree = SOURCE_ROOT; };
 		A08589982D91C504009B575D /* TMDBProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TMDBProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A08589AE2D91C506009B575D /* TMDBProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TMDBProjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A08589B82D91C507009B575D /* TMDBProjectUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TMDBProjectUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,6 +77,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A019C0672DE47A0F00FC4850 /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
 		A085898F2D91C504009B575D = {
 			isa = PBXGroup;
 			children = (
@@ -83,6 +89,7 @@
 				A085899A2D91C504009B575D /* TMDBProject */,
 				A0D6D87A2D9AB07100390D28 /* Frameworks */,
 				A08589992D91C504009B575D /* Products */,
+				A045365F2DE330DE00754B71 /* TMDBProject.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
@@ -214,6 +221,10 @@
 				{
 					ProductGroup = A09AC5052DD3928700628BC9 /* Products */;
 					ProjectRef = A0AA71892DD23F6F00475860 /* TMDBProject.xcodeproj */;
+				},
+				{
+					ProductGroup = A019C0672DE47A0F00FC4850 /* Products */;
+					ProjectRef = A045365F2DE330DE00754B71 /* TMDBProject.xcodeproj */;
 				},
 			);
 			projectRoot = "";

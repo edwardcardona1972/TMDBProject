@@ -17,8 +17,6 @@ class ActoresTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        //layer.borderColor = UIColor.lightGray.cgColor
-        //layer.borderWidth = 1.0
     }
     
     override func prepareForReuse() {

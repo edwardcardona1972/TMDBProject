@@ -31,7 +31,7 @@ class ActoresProviderNetwork: ActoresProviderProtocol {
             "page": self.page
         ]
         let request = CommonData.obtainRequest(withEndPoint: "person/popular", parameters: parameters)
-
+        
         return urlSession.dataTaskPublisher(for: request)
             .tryMap { data, response in
                 guard let urlResponse = response as? HTTPURLResponse, 200..<300 ~= urlResponse.statusCode else {
@@ -64,4 +64,3 @@ class ActoresProviderNetwork: ActoresProviderProtocol {
         .eraseToAnyPublisher()
     }
 }
-

@@ -29,4 +29,3 @@ struct KnownForPopular: Decodable {
     let release_date: String?
     let poster_path: String?
 }
-
