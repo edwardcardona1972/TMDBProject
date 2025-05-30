@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="298" id="KGk-i7-Jjw" customClass="TableViewCellSeries" customModule="TMDBProject" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="612" height="298"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="612" height="298"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="k56-pO-9PS">
+                        <rect key="frame" x="20" y="11" width="120" height="150"/>
+                        <subviews>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MYe-fr-9ed">
+                                <rect key="frame" x="0.0" y="10" width="120" height="200"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="200" id="379-70-pWj"/>
+                                    <constraint firstAttribute="width" constant="120" id="TV8-rC-dkI"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="MYe-fr-9ed" firstAttribute="leading" secondItem="k56-pO-9PS" secondAttribute="leadingMargin" id="4s8-XO-qxF"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="MYe-fr-9ed" secondAttribute="bottom" constant="20" id="Z0h-30-d9a"/>
+                            <constraint firstItem="MYe-fr-9ed" firstAttribute="top" secondItem="k56-pO-9PS" secondAttribute="topMargin" constant="10" id="en2-tc-kDd"/>
+                            <constraint firstItem="MYe-fr-9ed" firstAttribute="trailing" secondItem="k56-pO-9PS" secondAttribute="trailingMargin" id="heJ-8A-ux4"/>
+                        </constraints>
+                    </stackView>
+                    <stackView opaque="NO" contentMode="scaleAspectFit" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="NU4-ze-Fg9">
+                        <rect key="frame" x="150" y="11" width="422" height="130"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="i10-Wz-aEJ">
+                                <rect key="frame" x="0.0" y="0.0" width="422" height="110"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <attributedString key="attributedText">
+                                    <fragment content="titulo ">
+                                        <attributes>
+                                            <color key="NSColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <font key="NSFont" metaFont="system" size="20"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <color key="highlightedColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="estreno" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h4S-ub-KiY">
+                                <rect key="frame" x="0.0" y="110" width="422" height="20"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="i10-Wz-aEJ" firstAttribute="leading" secondItem="NU4-ze-Fg9" secondAttribute="leading" id="IwH-L9-BnL"/>
+                            <constraint firstAttribute="trailing" secondItem="i10-Wz-aEJ" secondAttribute="trailing" id="Pi1-Bi-Okc"/>
+                            <constraint firstItem="i10-Wz-aEJ" firstAttribute="top" secondItem="NU4-ze-Fg9" secondAttribute="top" id="UN4-g1-QEb"/>
+                        </constraints>
+                    </stackView>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottomMargin" secondItem="k56-pO-9PS" secondAttribute="bottom" id="4Ot-0f-JxN"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="NU4-ze-Fg9" secondAttribute="trailing" constant="20" id="LTD-Ec-aQc"/>
+                    <constraint firstItem="NU4-ze-Fg9" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="PTR-G0-6yz"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="NU4-ze-Fg9" secondAttribute="bottom" constant="20" id="gng-nv-rcs"/>
+                    <constraint firstItem="NU4-ze-Fg9" firstAttribute="leading" secondItem="k56-pO-9PS" secondAttribute="trailing" constant="10" id="uqf-PI-zrd"/>
+                    <constraint firstItem="k56-pO-9PS" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="xCp-Wl-Bn3"/>
+                    <constraint firstItem="k56-pO-9PS" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="yEs-pA-Gwc"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <color key="backgroundColor" systemColor="scrollViewTexturedBackgroundColor"/>
+            <connections>
+                <outlet property="estrenoSeries" destination="h4S-ub-KiY" id="nVQ-8K-9wo"/>
+                <outlet property="imageViewSeries" destination="MYe-fr-9ed" id="fhv-LK-G4r"/>
+                <outlet property="tituloSeries" destination="i10-Wz-aEJ" id="Ixz-aC-h3f"/>
+            </connections>
+            <point key="canvasLocation" x="108" y="-146"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <systemColor name="scrollViewTexturedBackgroundColor">
+            <color red="0.43529411764705883" green="0.44313725490196076" blue="0.47450980392156861" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

@@ -1,26 +1,26 @@
 //
-//  DetailsViewModel.swift
+//  ActorDetalleViewModel.swift
 //  TMDBProject
 //
-//  Created by Eduard Alexis Cardona Grajales on 2/4/25.
+//  Created by Eduard Alexis Cardona Grajales on 24/5/25.
 //
 
 import Foundation
 import Combine
 
-class DetailsViewModel {
+class ActorDetallesViewModel {
     
-    var peliculasProviderProtocol: peliculasProviderProtocol
-    var detallePelicula: ResponseDetallesPelicula?
+    var actoresProviderProtocol: ActoresProviderProtocol
+    var actorDetalles: ResponseDetallesActor?
     var reloadData = PassthroughSubject<Void, Error>()
     var anyCancellables: Set<AnyCancellable> = []
     
-    init(peliculasProviderProtocol: peliculasProviderProtocol) {
-        self.peliculasProviderProtocol = peliculasProviderProtocol
+    init(actoresProviderProtocol: ActoresProviderProtocol) {
+        self.actoresProviderProtocol = actoresProviderProtocol
     }
     
-    func getDetallesPelicula(peliculaId: String) {
-        peliculasProviderProtocol.getDetallesPelicula(peliculaId: peliculaId)
+    func getActorDetalles(idActor: String) {
+        actoresProviderProtocol.obtenerActorDetalle(idActor: idActor)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
@@ -30,7 +30,7 @@ class DetailsViewModel {
                     break
                 }
             }, receiveValue: {response in
-                self.detallePelicula = response
+                self.actorDetalles = response
                 self.reloadData.send(())
             })
             .store(in: &anyCancellables)

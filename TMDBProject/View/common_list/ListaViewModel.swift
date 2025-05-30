@@ -8,14 +8,10 @@ import UIKit
 import Combine
 import Foundation
 
-protocol PeliculasProviderProtocol {
-    func obtenerPeliculas(pagina: String) -> AnyPublisher<ResponseMasPopulares, PeliculaError>
-    func getDetallesPelicula(peliculaId: String) -> AnyPublisher<ResponseDetallesPelicula, PeliculaError>
-    func buscarPeliculas(query: String) -> AnyPublisher<ResponseMasPopulares, PeliculaError>
-}
-
 class ListaViewModel {
-    let peliculasProviderProtocol: peliculasProviderProtocol
+    let peliculasProviderProtocol: PeliculasProviderProtocol
+    let seriesProviderProtocol: SeriesProviderProtocol
+    let actoresProviderProtocol: ActoresProviderProtocol
     @Published var peliculas: [Pelicula] = []
     @Published var searchValue: String = ""
     @Published var filteredPeliculas: [Pelicula] = []
@@ -23,8 +19,15 @@ class ListaViewModel {
     private var anyCancellable: Set<AnyCancellable> = []
     let imageLoadedPublisher = PassthroughSubject<(UIImage?, IndexPath), Never>()
     
-    init(peliculasProviderProtocol: peliculasProviderProtocol) {
+    init(
+        peliculasProviderProtocol: PeliculasProviderProtocol,
+        seriesProviderProtocol: SeriesProviderProtocol,
+        actoresProviderProtocol: ActoresProviderProtocol
+    ) {
         self.peliculasProviderProtocol = peliculasProviderProtocol
+        self.seriesProviderProtocol = seriesProviderProtocol
+        self.actoresProviderProtocol = actoresProviderProtocol
+        
         $searchValue
             .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .removeDuplicates()
@@ -34,13 +37,13 @@ class ListaViewModel {
             .store(in: &anyCancellable)
     }
     
-    func getPeliculas(pagina: String) {
-        peliculasProviderProtocol.obtenerPeliculas(page: pagina)
+    func getPeliculas() {
+        peliculasProviderProtocol.obtenerPeliculas()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
-                    print("Error al obtener películas (página \(pagina)): \(error)")
+                    print("Error al obtener películas \(error)")
                 case .finished:
                     break
                 }

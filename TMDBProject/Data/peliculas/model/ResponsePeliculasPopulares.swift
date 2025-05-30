@@ -5,7 +5,7 @@
 //  Created by Eduard Alexis Cardona Grajales on 25/3/25.
 //
 
-struct ResponseMasPopulares: Decodable {
+struct ResponsePeliculasPopulares: Decodable {
     let page: Int
     let results: [Pelicula]
 }
